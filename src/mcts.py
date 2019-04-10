@@ -1,150 +1,146 @@
+import math
 import random
-from math import inf, log, sqrt
-from state import *
+from state import AbstractState as State, AbstractAction as Action
 
 
-class Node:
-    def __init__(self, state: AbstractState, parent: 'Node' = None):
-        self._state = state
-        self.is_expanded = False
-        self._parent = parent
-        self._children = set()
+def default_rollout_policy(state: State) -> float:
+    """ The default policy for simulation is to randomly (uniform distribution)
+        select_and_expand an action to take
+    :param state: The starting state
+    :return: The reward at the terminal node
+    """
+    while not state.is_terminal:
+        action = random.choice(state.possible_actions)
+        state = state.execute_action(action)
+    return state.reward
 
-    def __eq__(self, other) -> bool:
-        return self.__class__ == other.__class__ and self._state == other._state and self._parent == other._parent
 
-    def clear_parent(self) -> 'Node':
-        """ Set the parent of the node to None
-        """
+class Node(object):
+    def __init__(self, state: State):
+        self.state = state
         self._parent = None
-        return self
+        self.children = {}
+        self.is_expanded = self.is_terminal
+        self.tot_reward = 0
+        self.num_samples = 0
 
     @property
-    def is_terminal_node(self) -> bool:
-        return self._state.is_terminal
+    def is_terminal(self):
+        return self.state.is_terminal
 
     @property
-    def parent(self) -> 'Node':
+    def parent(self) -> "Node":
         return self._parent
 
-    @property
-    def children(self) -> set:
-        return self._children
-
-    @property
-    def state(self) -> AbstractState:
-        return self._state
-
-    def add_child(self, node: 'Node') -> 'Node':
-        """ Add a child node to the current node
-        :param node: The child node
-        :type: A Node object
-        """
-        node._parent = self
-        self._children.add(node)
-        return self
-
-
-def default_rollout_policy(child_state_list: list, cur_node: AbstractState) \
-        -> list:
-    """ Return an array with uniform probability distribution
-    :param child_state_list: A list of possible next states
-    :type: A list of AbstractState objects
-    :param cur_node: The current state
-    :type: An AbstractState object
-    :return: A list of floats
-    """
-    return [1.0 / len(child_state_list)] * len(child_state_list)
+    @parent.setter
+    def parent(self, node: "Node") -> None:
+        self._parent = node
 
 
 class MonteCarloSearchTree:
-    def __init__(self, initial_state: AbstractState, depth_limit: int = inf,
+    def __init__(self, samples: int = 1000, exploration_const: float = 1.0,
                  rollout_policy=default_rollout_policy):
-        """ Create a MonteCarloSearchTree object with specified depth limit
-            and rollout policy
-        :param depth_limit: The maximal allowable depths of the search tree
-        :type: A positive integer
-        :param rollout_policy: The policy that assigns probability to each
-                possible state
-        :type: A function that takes a list of new states and the current state
-                as input and returns a list of float probabilities with the
-                same length as the possible new states
+        """ Create a MonteCarloSearchTree object
+        :param samples: The number of samples to generate to obtain the best
+                action
+        :param exploration_const: The constant on the second term of UCB
+        :param rollout_policy: The simulation function
+        :type: A function that takes a state as input, perform simulation until
+                a terminal state, and returns the reward of the final state
         """
-        if depth_limit is not None:
-            assert depth_limit > 0
-        self._rollout = rollout_policy
-        self._depth_limit = depth_limit if depth_limit else inf
-        self._root = Node(initial_state)
-        self._reward = {self._root: 0.0}
-        self._num_samples = {self._root: 0}
+        if samples <= 0:
+            raise ValueError("The number of samples must be positive")
+        self.max_samples = samples
+        self.exploration_const = exploration_const
+        self.rollout = rollout_policy
+        self.root = None
 
-    def sample(self, node: Node, max_depth: int = inf, num_samples: int = 1000) \
-            -> 'MonteCarloSearchTree':
-        """ Perform Monte Carlo sampling starting from a node and update the
-            number of samples and reward for corresponding nodes
-        :param node: The starting node
-        :param max_depth: The maximal allowable depth for a single sample
-        :param num_samples: The number of Monte Carlo samples
+    @staticmethod
+    def select(node: Node, exploration_const: float = 1.0) -> Node:
+        """ Select the best child node based on UCB; if there are multiple
+            child nodes with the max UCB, randomly select_and_expand one
+        :param node: The parent node
+        :param exploration_const: The exploration constant
+        :return: The best child node
         """
-        assert max_depth > 0 and num_samples > 0
-        for _ in range(num_samples):
-            depth = 0
-            cur_node = node
-            while depth < max_depth and not cur_node.is_terminal_node:
-                possible_next_states = cur_node.state.feasible_next_states
-                p = self._rollout(possible_next_states, cur_node.state)
-                next_state = random.choice(possible_next_states, p=p)
-                new_node = Node(next_state, parent=cur_node)
-                if new_node not in cur_node.children:
-                    cur_node.add_child(new_node)
-                    self._reward[new_node] = 0.0
-                    self._num_samples[new_node] = 0
-                cur_node = new_node
-                depth += 1
-            self._back_propagate(cur_node)
-        return self
+        max_val = -math.inf
+        max_nodes = []
+        for child in node.children.values():
+            node_val = (child.tot_reward / child.num_samples
+                        + exploration_const *
+                        math.sqrt(2.0 * math.log(node.num_samples) /
+                                  child.num_samples))
+            if node_val > max_val:
+                max_val = node_val
+                max_nodes = [child]
+            elif node_val == max_val:
+                max_nodes.append(child)
+        return random.choice(max_nodes)
 
-    def _back_propagate(self, node: Node) -> 'MonteCarloSearchTree':
-        """ Propagate from leaf to root and update the number of samples, and
-            the rewards of each node along the way
-        :param node: The start node of back propagation
-        :type: A Node object
+    @staticmethod
+    def expand(node: Node) -> Node:
+        """ Add a new child node to the given node
+        :param node: The parent node
+        :return: The child node
         """
-        reward = node.state.reward
+        if node.is_expanded:
+            raise Exception("Should not expand a node that has already"
+                            " been expanded")
+        possible_actions = node.state.possible_actions
+        for action in possible_actions:
+            if action not in node.children.keys():
+                child_node = Node(node.state.execute_action(action))
+                child_node.parent = node
+                node.children[action] = child_node
+                if len(possible_actions) == len(node.children):
+                    node.is_expanded = True
+                return child_node
+
+    @staticmethod
+    def select_and_expand(node: Node, exploration_const: float) -> Node:
+        """ If a node is expanded, then choose the best child node by UCB;
+            if a node is not expanded, then choose a child node that is not
+            built into the tree yet
+        :param node: The parent node
+        :param exploration_const: The exploration constant
+        :return: The selected child node
+        """
+        while not node.is_terminal:
+            if node.is_expanded:
+                node = MonteCarloSearchTree.select(node, exploration_const)
+            else:
+                return MonteCarloSearchTree.expand(node)
+        return node
+
+    @staticmethod
+    def back_propagate(node: Node, reward: float = 0.0) -> None:
+        """ Propagate the reward and sample count from the specified node
+            back all the way to the root node
+        :param node: The node where the reward is evaluated
+        :param reward: The reward at the node
+        """
         while node is not None:
-            self._num_samples[node] += 1
-            self._reward[node] += reward
+            node.num_samples += 1
+            node.tot_reward += reward
             node = node.parent
-        return self
 
-    def get_best_next_node(self, node: Node) -> Node:
-        """ After performing sampling, obtain the best next possible state from
-            a starting node
-            When no possible action is available to change the state, return the
-            node itself
-        :param node: The starting node, from which action is taken to obtain
-                the next state
+    def execute_sample(self) -> None:
+        """ Perform selection, expansion, simulation and backpropagation with
+            one sample
         """
-        children = node.children
-        if children:
-            return max(children, key=lambda n: (
-                self._reward[n] / self._num_samples[n] + sqrt(2.0 * log(
-                    self._num_samples[n]) / self._num_samples[n])))
-        else:
-            return node
+        node = self.select_and_expand(self.root, self.exploration_const)
+        reward = self.rollout(node.state)
+        MonteCarloSearchTree.back_propagate(node, reward)
 
-    def execute_best_next_action(self) -> 'MonteCarloSearchTree':
-        """ Perform sampling from the current state and choose the best action for the next state
+    def search_for_action(self, state: State) -> Action:
+        """ With given initial state, obtain the best action to take by MCTS
+        :param state: The initial state
+        :return: The best action
         """
-        next_node = self.get_best_next_node(self._root)
-        self._root = next_node
-        self._root.clear_parent()
-        return self
-
-    def simulate_all_history(self) -> AbstractState:
-        """ Simulate the entire problem until the termination criteria is met
-        :return: The final state
-        """
-        while not self._root.is_terminal_node:
-            self.execute_best_next_action()
-        return self._root.state
+        self.root = Node(state)
+        for i in range(self.max_samples):
+            self.execute_sample()
+        best_child = self.select(self.root, 0)
+        for action, node in self.root.children.items():
+            if node is best_child:
+                return action
