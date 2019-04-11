@@ -5,7 +5,8 @@ from state import AbstractState as State, AbstractAction as Action
 
 def default_rollout_policy(state: State) -> float:
     """ The default policy for simulation is to randomly (uniform distribution)
-        select_and_expand an action to take
+        select an action to update the state and repeat the simulation until
+        a terminal state is reached
     :param state: The starting state
     :return: The reward at the terminal node
     """
@@ -17,16 +18,19 @@ def default_rollout_policy(state: State) -> float:
 
 class Node(object):
     def __init__(self, state: State):
-        self.state = state
+        self._state = state
         self._parent = None
-        self.children = {}
-        self.is_expanded = self.is_terminal
+        self.children = {}  # {AbstractAction: AbstractState}
         self.tot_reward = 0
         self.num_samples = 0
 
     @property
+    def state(self) -> State:
+        return self._state
+
+    @property
     def is_terminal(self):
-        return self.state.is_terminal
+        return self._state.is_terminal
 
     @property
     def parent(self) -> "Node":
@@ -35,6 +39,24 @@ class Node(object):
     @parent.setter
     def parent(self, node: "Node") -> None:
         self._parent = node
+
+    @property
+    def depth(self) -> int:
+        """ The depth (distance to the root, whose parent is None, plus 1) of
+            the node
+        """
+        depth = 0
+        node = self
+        while node:
+            depth += 1
+            node = node.parent
+        return depth
+
+    @property
+    def is_expanded(self) -> bool:
+        """ Whether all possible actions have been added to child {edge: node}
+        """
+        return len(self._state.possible_actions) == len(self.children.items())
 
 
 class MonteCarloSearchTree:
