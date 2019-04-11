@@ -86,7 +86,7 @@ class GomokuState(AbstractState):
         return new_state
 
     def switch_side(self) -> None:
-        """ Switch reward side from white to black or from black to white
+        """ Calculate reward for another player
         """
         self._player = 1 - self._player
 
