@@ -25,8 +25,8 @@ class GomokuAction(AbstractAction):
         return hash((self.player, self.position[0], self.position[1]))
 
     def __str__(self) -> str:
-        return ("Action: (player {0} position {1})".format(self.player,
-                                                           self.position))
+        return ("Action (player {0} position {1})".format(self.player,
+                                                          self.position))
 
 
 class GomokuState(AbstractState):
@@ -34,31 +34,50 @@ class GomokuState(AbstractState):
     winning_length = 4
 
     @staticmethod
-    def is_in_board(position: tuple):
+    def is_in_board(position: tuple) -> bool:
+        """ Determine if a position tuple is a valid position on the Gomoku
+            board
+        """
         return (len(position) == 2 and isinstance(position[0], int) and
                 isinstance(position[1], int) and
                 0 <= position[0] < GomokuState.board_size and
                 0 <= position[1] < GomokuState.board_size)
 
-    def __init__(self, reward_player: int = 0):
+    def __init__(self, reward_player: int = 0,
+                 use_default_heuristics: bool = False):
         """ Create a GomokuState object
+            A GomokuState object is uniquely identified by the black and white
+            pieces
         :param reward_player: The player based on whom reward is calculated
+        :param use_default_heuristics: Whether the default heuristics is used to
+            generate possible actions. The rule is, if the board has no
+            pieces, then place it at the center; if the board is not empty, then
+            place a piece only at locations where at least one of its neighbors
+            is occupied
         """
         if reward_player != 0 and reward_player != 1:
             raise ValueError("The player index must be 0 or 1")
         self._history = [[], []]
-        self._player = 0
+        self._player = 0  # the player to place the first piece is black
         self._reward_player = reward_player
+        self._use_heuristics = use_default_heuristics
 
     def __eq__(self, other: "GomokuState") -> bool:
+        """ Determine two GomokuState objects are identical
+            Two GomokuState objects are identical as long as the black pieces
+            and white pieces are the same, regardless of the order by which they
+            are placed
+        """
         return (self.__class__ == other.__class__ and
-                self._history == other._history)
+                set(self._history[0]) == set(other._history[0]) and
+                set(self._history[1]) == set(other._history[1]))
 
     def __hash__(self) -> tuple:
         return tuple(self._history[0] + self._history[1])
 
     def __copy__(self) -> "GomokuState":
-        new_state = GomokuState()
+        new_state = GomokuState(reward_player=self._reward_player,
+                                use_default_heuristics=self._use_heuristics)
         new_state._player = self._player
         new_state._history = deepcopy(self._history)
         return new_state
@@ -68,20 +87,36 @@ class GomokuState(AbstractState):
         """
         self._player = 1 - self._player
 
+    def switch_heuristics(self) -> None:
+        """ Switch the heuristics for generating possible actions
+        """
+        self._use_heuristics = not self._use_heuristics
+
     @property
     def player(self) -> int:
         return self._player
 
     @property
     def possible_actions(self) -> list:
-        """ Get all positions that have not been occupied
+        """ Get all possible positions to place the next piece
+            When heuristics is not used, return all Action's for unoccupied
+            positions; when heuristics is turned on, return a position if and
+            only if it is unoccupied and at least one of its neighboring
+            position is occupied
         :return: A list of actions
         """
-        return [GomokuAction(self._player, (i, j)) for i in range(
-                GomokuState.board_size) for j in range(
-                GomokuState.board_size) if
-                (i, j) not in self._history[0] and
-                (i, j) not in self._history[1]]
+        occupied = set(self._history[0] + self._history[1])
+        unoccupied = set((i, j) for i in range(GomokuState.board_size)
+                         for j in range(GomokuState.board_size)
+                         if (i, j) not in occupied)
+        if self._use_heuristics:
+            occupied_expanded = set((i + m, j + n) for i, j in occupied
+                                    for m in [-1, 0, 1] for n in [-1, 0, 1])
+            return [GomokuAction(self._player, position)
+                    for position in occupied_expanded.intersection(unoccupied)]
+        else:
+            return [GomokuAction(self._player, position)
+                    for position in unoccupied]
 
     @staticmethod
     def _max_line_seg_len(pts: set, direction: tuple, start: tuple) -> int:
@@ -96,7 +131,7 @@ class GomokuState(AbstractState):
         cur_len = 0
         pt = start
         while (0 <= pt[0] < GomokuState.board_size and 0 <= pt[1] <
-            GomokuState.board_size):
+               GomokuState.board_size):
             if pt in pts:
                 cur_len += 1
                 max_len = max(max_len, cur_len)
@@ -161,27 +196,35 @@ class GomokuState(AbstractState):
     @property
     def is_terminal(self) -> bool:
         """ Either black wins or white wins, the game terminates
-            If all positions are occupied, the game terminates
+            If all possible positions are occupied, the game terminates
         """
-        return (self.reward != 0 or set(self._history[0] + self._history[1])
-                == [(i, j) for i in range(GomokuState.board_size)
-                    for j in range(GomokuState.board_size)])
+        return self.reward != 0 or len(self.possible_actions) == 0
 
     def execute_action(self, action: GomokuAction) -> "GomokuState":
-        """ Execute the action and return the new state
-        :param action: The (player, action) tuple
+        """ Execute the action in a copy of the current state and return the new
+            state
+        :param action: Action(player, position)
         :return: The new state
         """
         if (action.position in self._history[0]
                 or action.position in self._history[1]):
             raise ValueError("The position has already been taken")
         new_state = self.__copy__()
-        new_state._player = 1 - self._player
         new_state._history[action.player].append(action.position)
+        new_state._player = 1 - self._player
         return new_state
 
-    def go(self, position: tuple) -> None:
-        self.execute_action(GomokuAction(self._player, position))
+    def go(self, position: tuple) -> "GomokuState":
+        """ Place the piece at the given position in the current state
+        :param position: The position to place the piece
+        """
+        if not GomokuState.is_in_board(position):
+            raise ValueError("The position is out of board")
+        if position in self._history[0] or position in self._history[1]:
+            raise ValueError("The position has already been taken")
+        self._history[self.player].append(position)
+        self._player = 1 - self._player
+        return self
 
     # TODO
     def visualize(self):

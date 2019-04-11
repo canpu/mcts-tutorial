@@ -1,7 +1,7 @@
 from gomoku import *
 from mcts import *
 
-state = GomokuState()
+state = GomokuState(use_default_heuristics=True)
 state.go((GomokuState.board_size // 2, GomokuState.board_size // 2))
 state.go((GomokuState.board_size // 2 + 1, GomokuState.board_size // 2))
 state.go((GomokuState.board_size // 2, GomokuState.board_size // 2 + 1))
