@@ -18,6 +18,8 @@ def default_rollout_policy(state: State) -> float:
 
 class Node(object):
     def __init__(self, state: State):
+        """ Create a Node object with given state
+        """
         self._state = state
         self._parent = None
         self.children = {}  # {AbstractAction: AbstractState}
@@ -36,10 +38,6 @@ class Node(object):
     def parent(self) -> "Node":
         return self._parent
 
-    @parent.setter
-    def parent(self, node: "Node") -> None:
-        self._parent = node
-
     @property
     def depth(self) -> int:
         """ The depth (distance to the root, whose parent is None, plus 1) of
@@ -57,6 +55,44 @@ class Node(object):
         """ Whether all possible actions have been added to child {edge: node}
         """
         return len(self._state.possible_actions) == len(self.children.items())
+
+    def add_child(self, action: Action, node: "Node") -> "Node":
+        """ Add a child node and set the parent of the child node
+        :param action: The action that would lead the current node to the child
+            node
+        :param node: The child node
+        """
+        self.children[action] = node
+        node._parent = self
+        return self
+
+    def __del__(self) -> None:
+        """ Delete a node and all its child nodes
+        """
+        if self._parent:
+            act = None
+            for action, child_node in self._parent.children.items():
+                if child_node == self:
+                    act = action
+                    break
+            del self._parent.children[act]
+        del self
+
+    def __eq__(self, other: "Node") -> bool:
+        return (self.__class__ == other.__class__ and
+                self._state == other._state and self._parent == other._parent)
+
+
+def back_propagate(node: Node, reward: float = 0.0) -> None:
+    """ Propagate the reward and sample count from the specified node
+        back all the way to the root node (the node with no parent)
+    :param node: The node where the reward is evaluated
+    :param reward: The reward at the node
+    """
+    while node is not None:
+        node.num_samples += 1
+        node.tot_reward += reward
+        node = node.parent
 
 
 class MonteCarloSearchTree:
@@ -112,10 +148,7 @@ class MonteCarloSearchTree:
         for action in possible_actions:
             if action not in node.children.keys():
                 child_node = Node(node.state.execute_action(action))
-                child_node.parent = node
-                node.children[action] = child_node
-                if len(possible_actions) == len(node.children):
-                    node.is_expanded = True
+                node.add_child(action, child_node)
                 return child_node
 
     @staticmethod
@@ -134,25 +167,13 @@ class MonteCarloSearchTree:
                 return MonteCarloSearchTree.expand(node)
         return node
 
-    @staticmethod
-    def back_propagate(node: Node, reward: float = 0.0) -> None:
-        """ Propagate the reward and sample count from the specified node
-            back all the way to the root node
-        :param node: The node where the reward is evaluated
-        :param reward: The reward at the node
-        """
-        while node is not None:
-            node.num_samples += 1
-            node.tot_reward += reward
-            node = node.parent
-
-    def execute_sample(self) -> None:
+    def execute_round(self) -> None:
         """ Perform selection, expansion, simulation and backpropagation with
             one sample
         """
         node = self.select_and_expand(self.root, self.exploration_const)
         reward = self.rollout(node.state)
-        MonteCarloSearchTree.back_propagate(node, reward)
+        back_propagate(node, reward)
 
     def search_for_action(self, state: State) -> Action:
         """ With given initial state, obtain the best action to take by MCTS
@@ -161,7 +182,7 @@ class MonteCarloSearchTree:
         """
         self.root = Node(state)
         for i in range(self.max_samples):
-            self.execute_sample()
+            self.execute_round()
         best_child = self.select(self.root, 0)
         for action, node in self.root.children.items():
             if node is best_child:
