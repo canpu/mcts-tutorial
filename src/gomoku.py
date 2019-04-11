@@ -105,7 +105,9 @@ class GomokuState(AbstractState):
             When heuristics is not used, return all Action's for unoccupied
             positions; when heuristics is turned on, return a position if and
             only if it is unoccupied and at least one of its neighboring
-            position is occupied
+            position is occupied; when heuristics is enabled but no piece has
+            been placed, the only action allowed is to place the piece at the
+            center
         :return: A list of actions
         """
         occupied = set(self._history[0] + self._history[1])
@@ -113,10 +115,15 @@ class GomokuState(AbstractState):
                          for j in range(GomokuState.board_size)
                          if (i, j) not in occupied)
         if self._use_heuristics:
-            occupied_expanded = set((i + m, j + n) for i, j in occupied
-                                    for m in [-1, 0, 1] for n in [-1, 0, 1])
-            return [GomokuAction(self._player, position)
-                    for position in occupied_expanded.intersection(unoccupied)]
+            if occupied:
+                occupied_expanded = set((i + m, j + n) for i, j in occupied
+                                        for m in [-1, 0, 1] for n in [-1, 0, 1])
+                return [GomokuAction(self._player, position) for
+                        position in occupied_expanded.intersection(unoccupied)]
+            else:
+                return [GomokuAction(self._player,
+                                     (GomokuState.board_size // 2,
+                                      GomokuState.board_size // 2))]
         else:
             return [GomokuAction(self._player, position)
                     for position in unoccupied]

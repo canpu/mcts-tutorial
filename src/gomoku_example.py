@@ -9,10 +9,21 @@ initial_state.go((3, 5)).go((3, 6)).go((4, 6)).go((5, 7)).go((5, 5)) \
     .go((3, 4))
 initial_state.visualize()
 
-final_state = initial_state.__copy__()
-final_state.go((4, 3)).go((4, 2)).go((5, 3)).go((6, 3)).go((6, 2)).go((2, 6)) \
+# This is a strategy for the black to win
+suggested_state = initial_state.__copy__()
+suggested_state.go((4, 3)).go((4, 2)).go((5, 3)).go((6, 3)).go((6, 2)).go((2, 6)) \
     .go((7, 1))
-final_state.visualize()
+suggested_state.visualize()
+
+# Simulate a game using MCTS
+state = initial_state.__copy__()
+while not state.is_terminal:
+    # TODO
+    # Black goes
+
+    # White goes
+    break
+
 
 mcts = MonteCarloSearchTree(samples=200)
 action = mcts.search_for_action(initial_state)
