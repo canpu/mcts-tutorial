@@ -1,5 +1,8 @@
 from copy import deepcopy
 from state import AbstractState, AbstractAction
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
+from matplotlib.figure import Figure
 
 
 class GomokuAction(AbstractAction):
@@ -31,7 +34,7 @@ class GomokuAction(AbstractAction):
 
 class GomokuState(AbstractState):
     board_size = 9
-    winning_length = 4
+    winning_length = 5
 
     @staticmethod
     def is_in_board(position: tuple) -> bool:
@@ -226,6 +229,78 @@ class GomokuState(AbstractState):
         self._player = 1 - self._player
         return self
 
-    # TODO
-    def visualize(self):
-        pass
+    def visualize(self, size: tuple = (15, 15), grid_width: float = 1.5,
+                  buffer_size: float = 0.5, piece_radius: float = 0.35,
+                  tick_font_size: int = 16, title_font_size: int = 24,
+                  count_font_size: int = 30) -> Figure:
+        """ Visualize the state of the Gomoku game
+        :param size: The size of the figure
+        :param grid_width: The width of the board grid
+        :param buffer_size: The size beyond the board to display
+        :param piece_radius: The size of a piece
+        :param tick_font_size: The font size for x- and y-ticks
+        :param title_font_size: The font size of the title
+        :param count_font_size: The font size for the order of pieces
+        :return:
+        """
+        if not (len(size) == 2 and size[0] > 0 and size[1] > 0):
+            raise ValueError("The figure size must be a tuple of two positive"
+                             "numbers")
+
+        # Initialization
+        fig = plt.figure(figsize=size)
+        ax = fig.add_subplot(111)
+        ax.grid(False)
+        ax.axis('equal')
+        ax.set_xlim(-buffer_size, GomokuState.board_size - 1 + buffer_size)
+        ax.set_ylim(-buffer_size, GomokuState.board_size - 1 + buffer_size)
+        plt.xticks(range(GomokuState.board_size),
+                   range(1, GomokuState.board_size + 1))
+        plt.yticks(range(GomokuState.board_size),
+                   map(chr, range(65, 65 + GomokuState.board_size)))
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label.set_fontsize(tick_font_size)
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label.set_fontsize(tick_font_size)
+        plt.xlabel('')
+        plt.ylabel('')
+
+        # Grid
+        plt.hlines(y=range(GomokuState.board_size), xmin=0,
+                   xmax=GomokuState.board_size - 1, color='k',
+                   linewidth=grid_width, zorder=0)
+        plt.vlines(x=range(GomokuState.board_size), ymin=0,
+                   ymax=GomokuState.board_size - 1, color='k',
+                   linewidth=grid_width, zorder=0)
+
+        # State
+        title = "Gomoku\n"
+        if self.is_terminal:
+            if self.black_reward == 1:
+                title += "Black Has Won"
+            elif self.black_reward == -1:
+                title += "White Has Won"
+            else:
+                title += "Tie"
+        else:
+            title += "Game in Progress"
+        plt.title(title, fontsize=title_font_size)
+        count = 1
+        player = 0
+        history = deepcopy(self._history)
+        colors = ['black', 'white']
+        while history[0] or history[1]:
+            if history[player]:
+                i, j = history[player].pop(0)
+                ax.add_patch(Circle(xy=(i, j), radius=piece_radius,
+                             edgecolor='k', facecolor=colors[player],
+                                    linewidth=grid_width * 2, fill=True,
+                                    zorder=1))
+                plt.text(i, j, str(count),
+                         fontsize=count_font_size, ha='center', va='center',
+                         color=colors[1 - player], zorder=2)
+            count += 1
+            player = 1 - player
+
+        plt.show()
+        return fig
