@@ -1,30 +1,37 @@
-from GameState import *
-from Environment import *
-from GameStateViz import *
+from gomoku import *
+from mcts import *
 
-if __name__ == "__main__":
-    # initialize a random environment
-    bbox = [1, 11, 1, 11]
-    environment = Environment(bbox)
-    environment.gen_random_environment()
+# We create an example game; in this game, the black has taken great advantage
+initial_state = GomokuState(use_default_heuristics=True)
+initial_state.go((3, 5)).go((3, 6)).go((4, 6)).go((5, 7)).go((5, 5)) \
+    .go((6, 4)).go((4, 5)).go((6, 5)).go((4, 4)).go((4, 7)).go((6, 6)) \
+    .go((7, 7)).go((2, 5)).go((1, 5)).go((3, 3)).go((2, 2)).go((6, 7)) \
+    .go((3, 4))
 
-    # initialize the AUV
-    time_steps = 10
-    start_pos1 = GamePosition(2,2)
-    start_pos2 = GamePosition(10,10)
-    auv1       = AUV(start_pos1)
-    auv2       = AUV(start_pos2)
-    environment.rem_obstacle(start_pos1)
-    environment.rem_obstacle(start_pos2)
-    environment.rem_target(start_pos1)
-    environment.rem_target(start_pos2)
+# This is a strategy for the black to win
+suggested_state = initial_state.__copy__()
+suggested_state.go((4, 3)).go((4, 2)).go((5, 3)).go((6, 3)).go((6, 2)).go((2, 6)) \
+    .go((7, 1))
 
-    # initialize the game state given the environment
-    initial_state = GameState(auvs=[auv1, auv2], environment=environment)
+# Simulate a game using MCTS
+state = initial_state.__copy__()
+while not state.is_terminal:
+    # TODO
+    # Black goes
 
-    # agents perform a random walk
-    # initial_state.gen_random_walk()
+    # White goes
+    break
 
-    # visualize the game state
-    viz = GameStateViz(initial_state)
-    viz.plot()
+
+A = Node(state)
+B = Node(state.__copy__().go((0, 0)))
+C = Node(state.__copy__().go((0, 1)))
+A.add_child(GomokuAction(0, (0, 0)), B)
+B.add_child(GomokuAction(0, (0, 0)), C)
+B.__del__()
+print(A.children)
+
+
+mcts = MonteCarloSearchTree(samples=200)
+action = mcts.search_for_action(initial_state)
+print(action)
