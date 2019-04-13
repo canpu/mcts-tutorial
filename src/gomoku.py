@@ -28,8 +28,8 @@ class GomokuAction(AbstractAction):
         return hash((self.player, self.position[0], self.position[1]))
 
     def __str__(self) -> str:
-        return ("Action (player {0} position {1})".format(self.player,
-                                                          self.position))
+        return ("Action (player {0} takes position {1})"
+                .format('WHITE' if self.player else 'BLACK', self.position))
 
 
 class GomokuState(AbstractState):
@@ -85,15 +85,29 @@ class GomokuState(AbstractState):
         new_state._history = deepcopy(self._history)
         return new_state
 
-    def switch_side(self) -> None:
-        """ Calculate reward for another player
-        """
-        self._player = 1 - self._player
+    def __str__(self) -> str:
+        black = set(self._history[0])
+        white = set(self._history[1])
+        s = ""
+        for i in range(GomokuState.board_size):
+            for j in range(GomokuState.board_size):
+                position = (i, j)
+                if position in black:
+                    s += 'B'
+                elif position in white:
+                    s += 'W'
+                else:
+                    s += '#'
+            s += '\n'
+        return s
 
-    def switch_heuristics(self) -> None:
-        """ Switch the heuristics for generating possible actions
-        """
-        self._use_heuristics = not self._use_heuristics
+    @property
+    def heuristics(self) -> bool:
+        return self._use_heuristics
+
+    @heuristics.setter
+    def heuristics(self, flag: bool = False) -> None:
+        self._use_heuristics = flag
 
     @property
     def player(self) -> int:
@@ -127,6 +141,17 @@ class GomokuState(AbstractState):
         else:
             return [GomokuAction(self._player, position)
                     for position in unoccupied]
+
+    @property
+    def side(self) -> int:
+        return self._reward_player
+
+    @side.setter
+    def side(self, reward_player: int = 0) -> None:
+        if reward_player != 0 and reward_player != 1:
+            raise ValueError("The side (based on which reward is calculated) "
+                             "can only be 0 for black or 1 for white")
+        self._reward_player = reward_player
 
     @staticmethod
     def _max_line_seg_len(pts: set, direction: tuple, start: tuple) -> int:
