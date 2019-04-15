@@ -73,8 +73,8 @@ class GomokuState(AbstractState):
                 set(self._history[0]) == set(other._history[0]) and
                 set(self._history[1]) == set(other._history[1]))
 
-    def __hash__(self) -> tuple:
-        return tuple(self._history[0] + self._history[1])
+    def __hash__(self) -> int:
+        return hash(tuple(self._history[0] + self._history[1]))
 
     def __copy__(self) -> "GomokuState":
         new_state = GomokuState(reward_player=self._reward_player,
@@ -262,7 +262,7 @@ class GomokuState(AbstractState):
     def visualize(self, size: (int, int) = (15, 15), grid_width: float = 1.5,
                   buffer_size: float = 0.5, piece_radius: float = 0.35,
                   tick_font_size: int = 16, title_font_size: int = 24,
-                  count_font_size: int = 30) -> Figure:
+                  count_font_size: int = 24) -> Figure:
         """ Visualize the state of the Gomoku game
         :param size: The size of the figure
         :param grid_width: The width of the board grid

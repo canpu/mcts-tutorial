@@ -58,7 +58,7 @@ def gomoku_example_simulate(black_heuristics: bool = False,
             white_mcts.update_root(white_action)
             black_state.go(white_action.position)
             white_state.go(white_action.position)
-            
+
     return black_state
 
 
