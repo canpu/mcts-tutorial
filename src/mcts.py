@@ -188,7 +188,6 @@ class MonteCarloSearchTree:
         :return: The best actions
         :rtype: A list of AbstractAction objects
         """
-        count = 0
         for _ in range(self._max_samples):
             execute_round(self._root, max_tree_depth=self._max_tree_depth)
         actions = []

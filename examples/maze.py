@@ -8,7 +8,7 @@ import numpy as np
 from copy import deepcopy
 
 
-class PacmanAction(AbstractAction):
+class MazeAction(AbstractAction):
     def __init__(self, agent_index: int, position: (int, int)):
         self._agent_index = agent_index
         self._position = position
@@ -22,15 +22,19 @@ class PacmanAction(AbstractAction):
         return self._position
 
     def __eq__(self, other) -> bool:
-        return (self.__class__ == other.__class and
+        return (self.__class__ == other.__class__ and
                 self.agent_index == other.agent_index and
                 self.position == other.position)
 
     def __hash__(self) -> int:
-        return hash(tuple([self._agent_index] + self._position))
+        return hash(tuple([self._agent_index] + list(self._position)))
+
+    def __str__(self) -> str:
+        return "Action: Agent {0} moves to {1}".format(self.agent_index,
+                                                       self.position)
 
 
-class PacmanEnvironment:
+class MazeEnvironment:
     def __init__(self, xlim: (int, int) = (0, 1), ylim: (int, int) = (0, 1),
                  obstacles: set = None, targets: dict = None,
                  is_border_obstacle_filled: bool = True):
@@ -92,22 +96,24 @@ class PacmanEnvironment:
     def rewards(self) -> dict:
         return deepcopy(self._targets)
 
-    def add_obstacle(self, obstacle_position: (int, int)) -> "PacmanEnvironment":
+    def add_obstacle(self, obstacle_position: (int, int)) -> "MazeEnvironment":
         if obstacle_position not in self._targets:
             self._obstacles.add(obstacle_position)
         return self
 
-    def remove_obstacle(self, obstacle_position: (int, int)) -> "PacmanEnvironment":
+    def remove_obstacle(self, obstacle_position: (int, int)) \
+            -> "MazeEnvironment":
         if obstacle_position in self._obstacles:
             self._obstacles.remove(obstacle_position)
             return self
 
-    def add_reward(self, position: (int, int), reward: float) -> "PacmanEnvironment":
+    def add_reward(self, position: (int, int), reward: float) \
+            -> "MazeEnvironment":
         if position not in self._obstacles:
             self._targets[position] = reward
         return self
 
-    def remove_reward(self, position: (int, int)) -> "PacmanEnvironment":
+    def remove_reward(self, position: (int, int)) -> "MazeEnvironment":
         if position in self._targets:
             del self._targets[position]
         return self
@@ -130,8 +136,8 @@ def gen_random_environment(xlim: (int, int) = (0, 10),
             obstacle_coverage + target_coverage <= 1):
         raise ValueError("The probability is not valid")
 
-    env = PacmanEnvironment(xlim, ylim,
-                            is_border_obstacle_filled=is_border_obstacle_filled)
+    env = MazeEnvironment(xlim, ylim,
+                          is_border_obstacle_filled=is_border_obstacle_filled)
 
     # Generate obstacles and targets by the given probability
     if obstacle_coverage > 0 or target_coverage > 0:
@@ -148,8 +154,8 @@ def gen_random_environment(xlim: (int, int) = (0, 10),
     return env
 
 
-class PacmanState(AbstractState):
-    def __init__(self, environment: PacmanEnvironment, time_remains: int = 10):
+class MazeState(AbstractState):
+    def __init__(self, environment: MazeEnvironment, time_remains: int = 10):
         """ Create a state of the AUV reward-collection game
         """
         if time_remains < 0:
@@ -159,11 +165,11 @@ class PacmanState(AbstractState):
         self._time_remains = time_remains
         self._turn = 0  # The index of which agent should move next
 
-    def __copy__(self) -> "PacmanState":
+    def __copy__(self) -> "MazeState":
         """ Deep copy does not apply to the Environment object because
             it is supposed to be static
         """
-        copy = PacmanState(self._environment, time_remains=self._time_remains)
+        copy = MazeState(self._environment, time_remains=self._time_remains)
         copy._paths = deepcopy(self._paths)
         copy._turn = self._turn
         return copy
@@ -173,7 +179,7 @@ class PacmanState(AbstractState):
                 self._environment.x_max and self._environment.y_min
                 <= position[1] <= self._environment.y_max)
 
-    def add_agent(self, position: (int, int)) -> "PacmanState":
+    def add_agent(self, position: (int, int)) -> "MazeState":
         if (self.is_in_range(position) and
                 position not in self._environment.obstacles):
             self._paths.append([position])
@@ -182,7 +188,11 @@ class PacmanState(AbstractState):
         return self
 
     @property
-    def environment(self) -> PacmanEnvironment:
+    def paths(self) -> list:
+        return self._paths
+
+    @property
+    def environment(self) -> MazeEnvironment:
         return self._environment
 
     @property
@@ -206,17 +216,11 @@ class PacmanState(AbstractState):
 
     @property
     def is_terminal(self) -> bool:
-        """ A state is terminal if and only if the time runs out or all rewards
-            have been collected
+        """ A state is terminal if and only if the time runs out
         """
-        if self._time_remains <= 0:
-            return True
-        for target in self._environment.rewards.keys():
-            if target not in self.visited:
-                return False
-        return True
+        return self._time_remains <= 0
 
-    def take_action(self, action: PacmanAction) -> "PacmanState":
+    def take_action(self, action: MazeAction) -> "MazeState":
         """ Execute the action based on the current state
         :param action: The action
         :return: The updated state
@@ -227,7 +231,7 @@ class PacmanState(AbstractState):
             self._time_remains -= 1
         return self
 
-    def execute_action(self, action: PacmanAction) -> "PacmanState":
+    def execute_action(self, action: MazeAction) -> "MazeState":
         """ Make a copy of the current state, execute the action and return the
             new state
         :param action: The action
@@ -240,13 +244,17 @@ class PacmanState(AbstractState):
     @property
     def possible_actions(self) -> list:
         i, j = self._paths[self._turn][-1]
-        actions = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
-        return [(self._turn, position) for position in actions if
-                self.is_in_range(position) and
-                position not in self._environment.obstacles]
+        actions = [MazeAction(self._turn, (i + 1, j)),
+                   MazeAction(self._turn, (i - 1, j)),
+                   MazeAction(self._turn, (i, j + 1)),
+                   MazeAction(self._turn, (i, j - 1))]
+        return [MazeAction(self._turn, action.position) for action in actions if
+                self.is_in_range(action.position) and
+                action.position not in self._environment.obstacles]
 
     def visualize(self, file_name=None, fig_size: (float, float) = (6.5, 6.5),
                   size_auv_path: float = 0.8, size_max_radius: float = 0.3,
+                  size_min_radius: float = 0.1,
                   tick_size: float = 14, grid_width: float = 0.25,
                   size_arrow_h_width: float = 0.4,
                   size_arrow_h_length: float = 0.3,
@@ -284,7 +292,9 @@ class PacmanState(AbstractState):
 
         # Plot rewards
         for position, reward in self._environment.rewards.items():
-            target_radius = (reward / max_reward) * size_max_radius
+            target_radius = ((reward / max_reward)
+                             * (size_max_radius - size_min_radius)
+                             + size_min_radius)
             centroid = (position[0] + 0.5, position[1] + 0.5)
             ax.add_patch(Circle(xy=centroid, radius=target_radius,
                                 color=color_target, zorder=z['target'],
@@ -310,14 +320,17 @@ class PacmanState(AbstractState):
                                     head_width=size_arrow_h_width,
                                     head_length=size_arrow_h_length,
                                     zorder=z['auv'], length_includes_head=True))
-            # Plot trajectories
+
+            # plot trajectories
             for i in range(1, len(path)):
-                x_p, y_p = path[-2]
-                xdata = (x + 0.5, x_p + 0.5)
-                ydata = (y + 0.5, y_p + 0.5)
-                ax.add_line(Line2D(xdata=xdata, ydata=ydata,
+                x, y = path[i]
+                x_p, y_p = path[i - 1]
+                ax.add_line(Line2D(xdata=(x + 0.5, x_p + 0.5),
+                                   ydata=(y + 0.5, y_p + 0.5),
                                    linewidth=size_auv_path * 10,
                                    color=color_auv_path, zorder=z['auv_path']))
+
+
 
         # Plotting
         plt.title('AUV Trajectory \n Accumulated Reward: ' + str(self.reward),
