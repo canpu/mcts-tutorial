@@ -79,5 +79,8 @@ def simulate_with_black_sample_neighborhood() -> None:
 
 
 if __name__ == '__main__':
+    print("===== Start of Simulation 1 =====")
     simulate_with_black_sample_arbitrarily()
+
+    print("\n===== Start of Simulation 2 =====")
     simulate_with_black_sample_neighborhood()
