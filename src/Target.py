@@ -1,5 +1,6 @@
 from GamePosition import GamePosition
 
+
 class Target(GamePosition):
     def __init__(self, x, y, value, visited=False):
         """

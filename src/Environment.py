@@ -1,13 +1,13 @@
 import math
 import random
-
 from GamePosition import GamePosition
-from Target       import Target
+from Target import Target
 
 
-class Environment():
-    def __init__(self, environment_bbox, obstacle_set=set([]), 
-                 target_set=set([]), default_value=1, border=True):
+class Environment:
+    def __init__(self, xlim: (int, int) = (0, 1), ylim: (int, int) = (0, 1),
+                 obstacle_set=set(),
+                 target_set=set(), default_value=1, border=True):
         """
         Represents the environment that the agents are operating in
         :param environment_bbox: the bounding box [x_min, x_max, y_min, y_max]
@@ -18,18 +18,16 @@ class Environment():
         :requires: obstacle_set and target_set are disjoint sets
             + obstacles take precedence over targets 
         """
-        self.x_min        = environment_bbox[0]
-        self.x_max        = environment_bbox[1]
-        self.y_min        = environment_bbox[2]
-        self.y_max        = environment_bbox[3]
-        self.bbox         = environment_bbox
-        self.x_range      = self.x_max+1 - self.x_min
-        self.y_range      = self.y_max+1 - self.y_min
+        self.x_min, self.x_max = xlim
+        self.y_min, self.y_max = ylim
+        self.x_range = self.x_max + 1 - self.x_min
+        self.y_range = self.y_max + 1 - self.y_min
         self.obstacle_set = obstacle_set
-        self.target_set   = target_set
-        self.default_val  = default_value
-        self.border       = border
+        self.target_set = target_set
+        self.default_val = default_value
+        self.border = border
         self.final_time = 10
+        self._time = 0
 
         # generate the border of obstacles as necessary 
         if border: 
