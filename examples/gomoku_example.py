@@ -16,7 +16,7 @@ def gomoku_example() -> GomokuState:
 
 
 def gomoku_example_solution() -> GomokuState:
-    """ This is suggested, but not only, strategy for black to win in the
+    """ This is suggested, but not unique, strategy for black to win in the
         example
     """
     suggested_state = gomoku_example().__copy__()
@@ -59,7 +59,6 @@ def gomoku_example_simulate(black_heuristics: bool = False,
             black_state.go(white_action.position)
             white_state.go(white_action.position)
 
-        black_state.visualize()
     return black_state
 
 

@@ -1,119 +1,107 @@
-import numpy as np
+import math
 import random
+from GamePosition import GamePosition
+from copy import deepcopy
+from state import AbstractAction
 
-class AUV():
-    def __init__(self, position, time_remaining):
-        """
-        Represents an AUV object navigating through the environment
+
+class AUV:
+    def __init__(self, position: GamePosition, time_remaining):
+        """ Create an AUV object navigating through the environment
         :param position: the initial position of the AUV
         :param time_remaining: the time remaining until the end of the "game" 
         """
-        self.position       = position
-        self.orientation    = 0
-        self.path           = [position]
-        self.total_value    = 0
+        self._position = position
+        self._orientation = 0
+        self._path = [position]
+        self._reward = 0
 
+    @property
+    def reward(self) -> float:
+        return self._reward
 
-    def get_position(self):
-        """
-        :return: the position of the AUV
-        """
-        return(self.position)
+    @property
+    def position(self) -> GamePosition:
+        return self._position
 
+    @property
+    def time_remaining(self) -> int:
+        return self.time_remaining
 
-    def get_time_remaining(self):
-        """
-        :return: the time_remaining of the AUV
-        """
-        return(self.time_remaining)        
+    @property
+    def path(self) -> list:
+        return deepcopy(self._path)
 
+    @property
+    def orientation(self):
+        return self._orientation
 
-    def get_path(self):
+    @property
+    def arrow_params(self) -> (float, float, float, float):
+        """ The parameters associated with drawing an arrow with matplotlib
+            Base of arrow drawn at (x, y), head of arrow drawn at (x+dx, y+dy)
         """
-        :return: the path of the AUV
-        """
-        return([position for position in self.path])
-
-
-    def get_orientation(self):
-        """
-        :return: the orientation of the AUV
-        """
-        return(self.orientation)
-
-
-    def get_arrow_params(self):
-        """
-        :return: the parameters associated with drawing an arrow with mpl
-            + base of arrow drawn at (x, y), head of arrow drawn at (x+dx, y+dy)
-        """
-        dx = np.cos(self.orientation)
-        dy = np.sin(self.orientation)
-        x  = self.position.get_x() + 0.5 - 0.5*dx
-        y  = self.position.get_y() + 0.5 - 0.5*dy
+        dx = math.cos(self._orientation)
+        dy = math.sin(self._orientation)
+        x = self._position.get_x() + 0.5 - 0.5 * dx
+        y = self._position.get_y() + 0.5 - 0.5 * dy
         return(x,y,dx,dy)
 
-
-    def get_rectangle_params(self, index):
+    def get_rectangle_params(self, index) -> ((float, float), (float, float)):
         """
         :param index: the index of the orientation list that must be plotted
         :return: the parameters associated with drawing an rectangle with mpl
         """
-        unit_len = 0.5
         point1 = self.path[index-1].get_centroid()
         point2 = self.path[index].get_centroid()
-        xdata  = (point2[0], point1[0])
-        ydata  = (point2[1], point1[1])
-        return(xdata, ydata)
-
+        xdata = (point2[0], point1[0])
+        ydata = (point2[1], point1[1])
+        return xdata, ydata
 
     def get_possible_positions(self, environment):
         """
         :return: a list of possible actions from the current state
         """
         possible_positions = []
-        if (self.position.get_pos_right() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_right())
-        if (self.position.get_pos_left() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_left())
-        if (self.position.get_pos_above() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_above())
-        if (self.position.get_pos_below() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_below())
-        return(possible_positions)
+        if (self._position.get_pos_right() not in environment.get_obstacles()):
+            possible_positions.append(self._position.get_pos_right())
+        if (self._position.get_pos_left() not in environment.get_obstacles()):
+            possible_positions.append(self._position.get_pos_left())
+        if (self._position.get_pos_above() not in environment.get_obstacles()):
+            possible_positions.append(self._position.get_pos_above())
+        if (self._position.get_pos_below() not in environment.get_obstacles()):
+            possible_positions.append(self._position.get_pos_below())
+        return possible_positions
 
-
-    def move_to_position(self, new_position, environment):
-        """
-        moves the AUV from current location to a new position
+    def move_to(self, new_position, environment):
+        """ The AUV moves to a new position and collects the reward
         """
         # update the vehicle orientation
-        if (new_position == self.position.get_pos_right()):
-            self.orientation = 0
-        elif (new_position == self.position.get_pos_left()):
-            self.orientation = np.pi
-        elif (new_position == self.position.get_pos_above()):
-            self.orientation = np.pi/2
-        elif (new_position == self.position.get_pos_below()):
-            self.orientation = -np.pi/2
+        if new_position == self._position.get_pos_right():
+            self._orientation = 0
+        elif new_position == self._position.get_pos_left():
+            self._orientation = math.pi
+        elif new_position == self._position.get_pos_above():
+            self._orientation = math.pi / 2
+        elif new_position == self._position.get_pos_below():
+            self._orientation = -math.pi / 2
 
         # update the vehicle position and path
-        self.position = new_position 
-        self.path.append(new_position)
+        self._position = new_position
+        self._path.append(new_position)
 
         # retrieve the reward if the new position is a target
-        return(environment.visit_target(new_position))
-
+        return environment.visit_target(new_position)
 
     def take_random_step(self, environment):
-        """
-        takes a random step from the given position, biased towards new targets
+        """ Takes a random step from the given position,
+            biased towards new targets
         :param environment: the current state of the environment 
         """
         possible_positions = self.get_possible_positions(environment)
         if len(possible_positions) > 0:
-            return(self.move_to_position(random.choice(possible_positions), 
-                                         environment))
+            return self.move_to(random.choice(possible_positions),
+                                environment)
         else:
-            return(0)
+            return 0
 

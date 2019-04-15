@@ -191,8 +191,6 @@ class MonteCarloSearchTree:
         count = 0
         for _ in range(self._max_samples):
             execute_round(self._root, max_tree_depth=self._max_tree_depth)
-            count += 1
-            print(count)
         actions = []
         cur_node = self._root
         for _ in range(search_depth):
