@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 
 
 class GomokuAction(AbstractAction):
-    def __init__(self, player: int, position: tuple):
+    def __init__(self, player: int, position: (int, int)):
         """ Create a GomokuAction object identified by the player and
             location to place the piece
         :param player: The player to place the piece
@@ -37,13 +37,11 @@ class GomokuState(AbstractState):
     winning_length = 5
 
     @staticmethod
-    def is_in_board(position: tuple) -> bool:
+    def is_in_board(position: (int, int)) -> bool:
         """ Determine if a position tuple is a valid position on the Gomoku
             board
         """
-        return (len(position) == 2 and isinstance(position[0], int) and
-                isinstance(position[1], int) and
-                0 <= position[0] < GomokuState.board_size and
+        return (0 <= position[0] < GomokuState.board_size and
                 0 <= position[1] < GomokuState.board_size)
 
     def __init__(self, reward_player: int = 0,
@@ -154,7 +152,8 @@ class GomokuState(AbstractState):
         self._reward_player = reward_player
 
     @staticmethod
-    def _max_line_seg_len(pts: set, direction: tuple, start: tuple) -> int:
+    def _max_line_seg_len(pts: set, direction: (int, int), start: (int, int))\
+            -> int:
         """ Get the maximal length of line segments formed by pts along the
             given direction, from a starting point
         :param pts: The points
@@ -165,8 +164,7 @@ class GomokuState(AbstractState):
         max_len = 0
         cur_len = 0
         pt = start
-        while (0 <= pt[0] < GomokuState.board_size and 0 <= pt[1] <
-               GomokuState.board_size):
+        while GomokuState.is_in_board(pt):
             if pt in pts:
                 cur_len += 1
                 max_len = max(max_len, cur_len)
@@ -249,7 +247,7 @@ class GomokuState(AbstractState):
         new_state._player = 1 - self._player
         return new_state
 
-    def go(self, position: tuple) -> "GomokuState":
+    def go(self, position: (int, int)) -> "GomokuState":
         """ Place the piece at the given position in the current state
         :param position: The position to place the piece
         """
@@ -261,7 +259,7 @@ class GomokuState(AbstractState):
         self._player = 1 - self._player
         return self
 
-    def visualize(self, size: tuple = (15, 15), grid_width: float = 1.5,
+    def visualize(self, size: (int, int) = (15, 15), grid_width: float = 1.5,
                   buffer_size: float = 0.5, piece_radius: float = 0.35,
                   tick_font_size: int = 16, title_font_size: int = 24,
                   count_font_size: int = 30) -> Figure:
@@ -273,9 +271,9 @@ class GomokuState(AbstractState):
         :param tick_font_size: The font size for x- and y-ticks
         :param title_font_size: The font size of the title
         :param count_font_size: The font size for the order of pieces
-        :return:
+        :return: The figure
         """
-        if not (len(size) == 2 and size[0] > 0 and size[1] > 0):
+        if not (size[0] > 0 and size[1] > 0):
             raise ValueError("The figure size must be a tuple of two positive"
                              "numbers")
 
