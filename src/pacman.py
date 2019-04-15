@@ -1,135 +1,346 @@
-import numpy as np
+from state import *
 import random
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
+from matplotlib.patches import FancyArrow, Rectangle, Circle
+import numpy as np
+from copy import deepcopy
 
 
-def _assert_position(position: tuple):
-    assert (len(position) == 2 and isinstance(position[0], int) and
-           isinstance(position[1], int))
+class PacmanAction(AbstractAction):
+    def __init__(self, agent_index: int, position: (int, int)):
+        self._agent_index = agent_index
+        self._position = position
+
+    @property
+    def agent_index(self) -> int:
+        return self._agent_index
+
+    @property
+    def position(self) -> (int, int):
+        return self._position
+
+    def __eq__(self, other) -> bool:
+        return (self.__class__ == other.__class and
+                self.agent_index == other.agent_index and
+                self.position == other.position)
+
+    def __hash__(self) -> int:
+        return hash(tuple([self._agent_index] + self._position))
 
 
-class Agent:
-    def __init__(self):
-        self._position = None
-        self._path = []
-
-
-
-
-
-class AUV():
-    def __init__(self, position, time_remaining):
+class PacmanEnvironment:
+    def __init__(self, xlim: (int, int) = (0, 1), ylim: (int, int) = (0, 1),
+                 obstacles: set = None, targets: dict = None,
+                 is_border_obstacle_filled: bool = True):
+        """ Create an Environment object in which the AUV problem is defined
         """
-        Represents an AUV object navigating through the environment
-        :param position: the initial position of the AUV
-        :param time_remaining: the time remaining until the end of the "game"
-        """
-        self.position       = position
-        self.time_remaining = time_remaining
-        self.orientation    = 0
-        self.path           = [position]
-        self.total_value    = 0
+        self._x_min, self._x_max = xlim
+        self._y_min, self._y_max = ylim
+        self._obstacles = obstacles if obstacles else set()
+        self._targets = targets if targets else {}
 
+        # Make border obstacles if specified
+        if is_border_obstacle_filled:
+            for j in range(self.y_min, self.y_max + 1):
+                self.add_obstacle((self.x_min, j)).add_obstacle((self.x_max, j))
+            for i in range(self.x_min, self.x_max + 1):
+                self.add_obstacle((i, self.y_min)).add_obstacle((i, self.y_max))
 
-    def get_position(self):
-        """
-        :return: the position of the AUV
-        """
-        return(self.position)
+        # Remove target regions that were defined within obstacles
+        for position in self._obstacles:
+            if position in self._targets.keys():
+                del self._targets[position]
 
+    @property
+    def x_min(self) -> int:
+        return self._x_min
 
-    def get_time_remaining(self):
-        """
-        :return: the time_remaining of the AUV
-        """
-        return(self.time_remaining)
+    @property
+    def y_min(self) -> int:
+        return self._y_min
 
+    @property
+    def x_max(self) -> int:
+        return self._x_max
 
-    def get_path(self):
-        """
-        :return: the path of the AUV
-        """
-        return([position for position in self.path])
+    @property
+    def y_max(self) -> int:
+        return self._y_max
 
-
-    def get_orientation(self):
-        """
-        :return: the orientation of the AUV
-        """
-        return(self.orientation)
-
-
-    def get_arrow_params(self):
-        """
-        :return: the parameters associated with drawing an arrow with mpl
-            + base of arrow drawn at (x, y), head of arrow drawn at (x+dx, y+dy)
-        """
-        dx = np.cos(self.orientation)
-        dy = np.sin(self.orientation)
-        x  = self.position.get_x() + 0.5 - 0.5*dx
-        y  = self.position.get_y() + 0.5 - 0.5*dy
-        return(x,y,dx,dy)
-
-
-    def get_rectangle_params(self, index):
-        """
-        :param index: the index of the orientation list that must be plotted
-        :return: the parameters associated with drawing an rectangle with mpl
-        """
-        unit_len = 0.5
-        point1 = self.path[index-1].get_centroid()
-        point2 = self.path[index].get_centroid()
-        xdata  = (point2[0], point1[0])
-        ydata  = (point2[1], point1[1])
-        return(xdata, ydata)
-
-
-    def get_possible_positions(self, environment):
-        """
-        :return: a list of possible actions from the current state
-        """
-        possible_positions = []
-        if (self.position.get_pos_right() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_right())
-        if (self.position.get_pos_left() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_left())
-        if (self.position.get_pos_above() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_above())
-        if (self.position.get_pos_below() not in environment.get_obstacles()):
-            possible_positions.append(self.position.get_pos_below())
-        return(possible_positions)
-
-
-    def move_to_position(self, new_position, environment):
-        """
-        moves the AUV from current location to a new position
-        """
-        # update the vehicle orientation
-        if (new_position == self.position.get_pos_right()):
-            self.orientation = 0
-        elif (new_position == self.position.get_pos_left()):
-            self.orientation = np.pi
-        elif (new_position == self.position.get_pos_above()):
-            self.orientation = np.pi/2
-        elif (new_position == self.position.get_pos_below()):
-            self.orientation = -np.pi/2
-
-        # update the vehicle position and path
-        self.position = new_position
-        self.path.append(new_position)
-
-        # retrieve the reward if the new position is a target
-        return(environment.visit_target(new_position))
-
-
-    def take_random_step(self, environment):
-        """
-        takes a random step from the given position, biased towards new targets
-        :param environment: the current state of the environment
-        """
-        possible_positions = self.get_possible_positions(environment)
-        if (len(possible_positions) > 0) and (self.time_remaining > 0):
-            return(self.move_to_position(random.choice(possible_positions),
-                                         environment))
+    @property
+    def max_reward(self) -> float:
+        if self._targets:
+            return max(self._targets.values())
         else:
-            return(0)
+            return 0.0
 
+    @property
+    def x_range(self) -> int:
+        return self._x_max + 1 - self._x_min
+
+    @property
+    def y_range(self) -> int:
+        return self._y_max + 1 - self._y_min
+
+    @property
+    def obstacles(self) -> set:
+        return deepcopy(self._obstacles)
+
+    @property
+    def rewards(self) -> dict:
+        return deepcopy(self._targets)
+
+    def add_obstacle(self, obstacle_position: (int, int)) -> "PacmanEnvironment":
+        if obstacle_position not in self._targets:
+            self._obstacles.add(obstacle_position)
+        return self
+
+    def remove_obstacle(self, obstacle_position: (int, int)) -> "PacmanEnvironment":
+        if obstacle_position in self._obstacles:
+            self._obstacles.remove(obstacle_position)
+            return self
+
+    def add_reward(self, position: (int, int), reward: float) -> "PacmanEnvironment":
+        if position not in self._obstacles:
+            self._targets[position] = reward
+        return self
+
+    def remove_reward(self, position: (int, int)) -> "PacmanEnvironment":
+        if position in self._targets:
+            del self._targets[position]
+        return self
+
+    def __eq__(self, other) -> bool:
+        return (self.__class__ == other.__class and self.x_max == other.x_max
+                and self.x_min == other.x_min and self.y_min == other.y_min and
+                self.y_max == other.y_max and
+                self._obstacles == other.obstacles and
+                self._targets == other.rewards)
+
+
+def gen_random_environment(xlim: (int, int) = (0, 10),
+                           ylim: (int, int) = (0, 10),
+                           obstacle_coverage: float = 0.2,
+                           target_coverage: float = 0.2,
+                           reward_range: (float, float) = (1.0, 3.0),
+                           is_border_obstacle_filled: bool = True):
+    if not (obstacle_coverage >= 0 and target_coverage >= 0 and
+            obstacle_coverage + target_coverage <= 1):
+        raise ValueError("The probability is not valid")
+
+    env = PacmanEnvironment(xlim, ylim,
+                            is_border_obstacle_filled=is_border_obstacle_filled)
+
+    # Generate obstacles and targets by the given probability
+    if obstacle_coverage > 0 or target_coverage > 0:
+        for i in range(ylim[0], ylim[1] + 1):
+            for j in range(xlim[0], xlim[1] + 1):
+                if (i, j) not in env.obstacles:
+                    r = random.random()
+                    if r <= obstacle_coverage:
+                        env.add_obstacle((i, j))
+                    elif r <= obstacle_coverage + target_coverage:
+                        env.add_reward((i, j),
+                                       random.randrange(reward_range[0],
+                                                        reward_range[1]))
+    return env
+
+
+class PacmanState(AbstractState):
+    def __init__(self, environment: PacmanEnvironment, time_remains: int = 10):
+        """ Create a state of the AUV reward-collection game
+        """
+        if time_remains < 0:
+            raise ValueError("The remaining time cannot be negative")
+        self._paths = []
+        self._environment = environment
+        self._time_remains = time_remains
+        self._turn = 0  # The index of which agent should move next
+
+    def __copy__(self) -> "PacmanState":
+        """ Deep copy does not apply to the Environment object because
+            it is supposed to be static
+        """
+        copy = PacmanState(self._environment, time_remains=self._time_remains)
+        copy._paths = deepcopy(self._paths)
+        copy._turn = self._turn
+        return copy
+
+    def is_in_range(self, position: (int, int)) -> bool:
+        return (self._environment.x_min <= position[0] <=
+                self._environment.x_max and self._environment.y_min
+                <= position[1] <= self._environment.y_max)
+
+    def add_agent(self, position: (int, int)) -> "PacmanState":
+        if (self.is_in_range(position) and
+                position not in self._environment.obstacles):
+            self._paths.append([position])
+        else:
+            raise ValueError("The given position is invalid")
+        return self
+
+    @property
+    def environment(self) -> PacmanEnvironment:
+        return self._environment
+
+    @property
+    def visited(self) -> set:
+        visited = []
+        for path in self._paths:
+            visited += path
+        return set(visited)
+
+    @property
+    def reward(self) -> float:
+        reward = 0.0
+        for target_position in self._environment.rewards:
+            if target_position in self.visited:
+                reward += self._environment.rewards[target_position]
+        return reward
+
+    @property
+    def time_remains(self) -> int:
+        return self._time_remains
+
+    @property
+    def is_terminal(self) -> bool:
+        """ A state is terminal if and only if the time runs out or all rewards
+            have been collected
+        """
+        if self._time_remains <= 0:
+            return True
+        for target in self._environment.rewards.keys():
+            if target not in self.visited:
+                return False
+        return True
+
+    def take_action(self, action: PacmanAction) -> "PacmanState":
+        """ Execute the action based on the current state
+        :param action: The action
+        :return: The updated state
+        """
+        self._paths[self._turn].append(action.position)
+        self._turn = (self._turn + 1) % len(self._paths)
+        if self._turn == 0:  # When all agents have taken a turn of actions
+            self._time_remains -= 1
+        return self
+
+    def execute_action(self, action: PacmanAction) -> "PacmanState":
+        """ Make a copy of the current state, execute the action and return the
+            new state
+        :param action: The action
+        :return: A copy of the new state
+        """
+        new_state = self.__copy__()
+        new_state.take_action(action)
+        return new_state
+
+    @property
+    def possible_actions(self) -> list:
+        i, j = self._paths[self._turn][-1]
+        actions = [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)]
+        return [(self._turn, position) for position in actions if
+                self.is_in_range(position) and
+                position not in self._environment.obstacles]
+
+    def visualize(self, file_name=None, fig_size: (float, float) = (6.5, 6.5),
+                  size_auv_path: float = 0.8, size_max_radius: float = 0.3,
+                  tick_size: float = 14, grid_width: float = 0.25,
+                  size_arrow_h_width: float = 0.4,
+                  size_arrow_h_length: float = 0.3,
+                  size_arrow_width: float = 0.4,
+                  color_obstacle: str = 'firebrick',
+                  color_target: str = 'deepskyblue',
+                  color_auv: str = 'darkorange',
+                  color_auv_path: str = 'peachpuff',
+                  visited_reward_opacity: float = 0.15) -> Figure:
+
+        if (fig_size[0] <= 0 or fig_size[1] <= 0 or size_auv_path <= 0 or
+                size_max_radius <= 0 or size_arrow_h_width <= 0 or
+                size_arrow_h_length <= 0 or size_arrow_width <= 0 or
+                tick_size <= 0 or grid_width <= 0):
+            raise ValueError("Size must be positive")
+        max_reward = self._environment.max_reward
+        title_font = {'fontname': 'Sans Serif', 'size': '16', 'color': 'black',
+                      'weight': 'bold'}
+        z = {'auv_path': 1, 'target': 2, 'obstacle': 3, 'auv': 5}
+
+        # Initialize the figure
+        fig = plt.figure(figsize=fig_size)
+        ax = fig.add_subplot(111)
+        plt.hlines(y=range(self._environment.y_min, self._environment.y_max + 1)
+                   , xmin=self._environment.x_min, xmax=self._environment.x_max,
+                   color='k', linewidth=grid_width, zorder=0)
+        plt.vlines(x=range(self._environment.x_min, self._environment.x_max + 1)
+                   , ymin=self._environment.y_min, ymax=self._environment.y_max,
+                   color='k', linewidth=grid_width, zorder=0)
+
+        # Plot obstacles
+        for i, j in self._environment.obstacles:
+            ax.add_patch(Rectangle(xy=(i, j), width=1, height=1,
+                                   color=color_obstacle, zorder=z['obstacle']))
+
+        # Plot rewards
+        for position, reward in self._environment.rewards.items():
+            target_radius = (reward / max_reward) * size_max_radius
+            centroid = (position[0] + 0.5, position[1] + 0.5)
+            ax.add_patch(Circle(xy=centroid, radius=target_radius,
+                                color=color_target, zorder=z['target'],
+                                alpha=(visited_reward_opacity
+                                       if position in self.visited else 1.0)))
+
+        # Plot agents
+        for path in self._paths:
+            x, y = path[-1]
+            dx, dy = 0, 1
+            if len(path) >= 2:
+                x_p, y_p = path[-2]
+                if x == x_p + 1 and y == y_p:
+                    dx, dy = 1, 0
+                elif x == x_p - 1 and y == y_p:
+                    dx, dy = -1, 0
+                elif x == x_p and y == y_p - 1:
+                    dx, dy = 0, -1
+            x += 0.5 * float(1 - dx)
+            y += 0.5 * float(1 - dy)
+            ax.add_patch(FancyArrow(x=x, y=y, dx=dx, dy=dy, fc=color_auv,
+                                    width=size_arrow_width,
+                                    head_width=size_arrow_h_width,
+                                    head_length=size_arrow_h_length,
+                                    zorder=z['auv'], length_includes_head=True))
+            # Plot trajectories
+            for i in range(1, len(path)):
+                x_p, y_p = path[-2]
+                xdata = (x + 0.5, x_p + 0.5)
+                ydata = (y + 0.5, y_p + 0.5)
+                ax.add_line(Line2D(xdata=xdata, ydata=ydata,
+                                   linewidth=size_auv_path * 10,
+                                   color=color_auv_path, zorder=z['auv_path']))
+
+        # Plotting
+        plt.title('AUV Trajectory \n Accumulated Reward: ' + str(self.reward),
+                  title_font)
+        plt.xlabel('x', title_font)
+        plt.ylabel('y', title_font)
+        x_ticks = np.arange(self._environment.x_min, self._environment.x_max + 1
+                            , 1)
+        y_ticks = np.arange(self._environment.y_min, self._environment.y_max + 1
+                            , 1)
+        plt.xticks(x_ticks + 0.5, x_ticks.astype(int))
+        plt.yticks(y_ticks + 0.5, y_ticks.astype(int))
+        ax.tick_params(labelsize=tick_size)
+        ax.grid(False)
+        ax.axis('equal')
+        ax.set_xlim(self._environment.x_min - 0.5,
+                    self._environment.x_max + 1.5)
+        ax.set_ylim(self._environment.y_min - 0.5,
+                    self._environment.y_max + 1.5)
+
+        # Save and display
+        plt.show()
+        if file_name is not None:
+            plt.savefig(file_name)
+
+        return fig
