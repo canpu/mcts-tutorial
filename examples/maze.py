@@ -169,7 +169,8 @@ class MazeState(AbstractState):
         """ Deep copy does not apply to the Environment object because
             it is supposed to be static
         """
-        copy = MazeState(self._environment, time_remains=self._time_remains)
+        copy = MazeState(self._environment)
+        copy._time_remains = self._time_remains
         copy._paths = deepcopy(self._paths)
         copy._turn = self._turn
         return copy

@@ -62,11 +62,14 @@ def maze_example_2():
 
 def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
     mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15,
-                                samples=50)
+                                samples=1000)
     random.seed(rand_seed)
     state = initial_state.__copy__()
+    time = 0
     while not state.is_terminal:
         actions = mcts.search_for_actions(search_depth=3)
+        time += 1
+        print("Time step {0}".format(time))
         for i in range(len(state.paths)):
             action = actions[i]
             print(action)
@@ -74,10 +77,11 @@ def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
             mcts.update_root(action)
             if state.is_terminal:
                 break
-        state.visualize()
     return state
 
 
 if __name__ == "__main__":
-    simulate(maze_example_1())
-    simulate(maze_example_2())
+    print("===== Start of Example 1 =====")
+    simulate(maze_example_1()).visualize()
+    print("\n===== Start of Example 1 =====")
+    simulate(maze_example_2()).visualize()
