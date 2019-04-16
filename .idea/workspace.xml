@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="533cca82-65c2-4c2e-b620-53bcc157a65b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/examples/maze_unfinished.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/maze.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/maze.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pset_mcts_collaboration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/src/pset_mcts_collaboration.ipynb" afterDir="false" />
-    </list>
+    <list default="true" id="533cca82-65c2-4c2e-b620-53bcc157a65b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -237,7 +232,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/examples" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pset" />
     <property name="restartRequiresConfirmation" value="false" />
   </component>
   <component name="RecentsManager">
