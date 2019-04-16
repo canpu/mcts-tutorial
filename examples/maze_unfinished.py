@@ -154,7 +154,7 @@ def gen_random_environment(xlim: (int, int) = (0, 10),
     return env
 
 
-class MazeState(AbstractState):
+class UnfinishedMazeState(AbstractState):
     def __init__(self, environment: MazeEnvironment, time_remains: int = 10):
         """ Create a state of the AUV reward-collection game
         """
@@ -165,11 +165,11 @@ class MazeState(AbstractState):
         self._time_remains = time_remains
         self._turn = 0  # The index of which agent should move next
 
-    def __copy__(self) -> "MazeState":
+    def __copy__(self) -> "UnfinishedMazeState":
         """ Deep copy does not apply to the Environment object because
             it is supposed to be static
         """
-        copy = MazeState(self._environment)
+        copy = UnfinishedMazeState(self._environment)
         copy._time_remains = self._time_remains
         copy._paths = deepcopy(self._paths)
         copy._turn = self._turn
@@ -180,7 +180,7 @@ class MazeState(AbstractState):
                 self._environment.x_max and self._environment.y_min
                 <= position[1] <= self._environment.y_max)
 
-    def add_agent(self, position: (int, int)) -> "MazeState":
+    def add_agent(self, position: (int, int)) -> "UnfinishedMazeState":
         if (self.is_in_range(position) and
                 position not in self._environment.obstacles):
             self._paths.append([position])
@@ -205,20 +205,7 @@ class MazeState(AbstractState):
 
     @property
     def reward(self) -> float:
-        reward = 0.0
-        for target_position in self._environment.rewards:
-            if target_position in self.visited:
-                reward += self._environment.rewards[target_position]
-        return reward
-
-    def switch_agent(self) -> "MazeState":
-        """ After the movement of one agent, it would be the turn of the next
-            agent
-        """
-        self._turn = (self._turn + 1) % len(self._paths)
-        if self._turn == 0:  # When all agents have taken a turn of actions
-            self._time_remains -= 1
-        return self
+        raise Exception("Property reward is not implemented")
 
     @property
     def time_remains(self) -> int:
@@ -228,21 +215,16 @@ class MazeState(AbstractState):
     def is_terminal(self) -> bool:
         """ A state is terminal if and only if the time runs out
         """
-        return self._time_remains <= 0
+        raise Exception("Property is_terminal is not implemented")
 
-    @property
-    def turn(self) -> int:
-        return self._turn
-
-    def take_action(self, action: MazeAction) -> "MazeState":
+    def take_action(self, action: MazeAction) -> "UnfinishedMazeState":
         """ Execute the action based on the current state
         :param action: The action
         :return: The updated state
         """
-        self._paths[self._turn].append(action.position)
-        return self.switch_agent()
+        raise Exception("Function take_action is not implemented")
 
-    def execute_action(self, action: MazeAction) -> "MazeState":
+    def execute_action(self, action: MazeAction) -> "UnfinishedMazeState":
         """ Make a copy of the current state, execute the action and return the
             new state
         :param action: The action
@@ -251,6 +233,19 @@ class MazeState(AbstractState):
         new_state = self.__copy__()
         new_state.take_action(action)
         return new_state
+
+    def switch_agent(self) -> "UnfinishedMazeState":
+        """ After the movement of one agent, it would be the turn of the next
+            agent
+        """
+        self._turn = (self._turn + 1) % len(self._paths)
+        if self._turn == 0:  # When all agents have taken a turn of actions
+            self._time_remains -= 1
+        return self
+
+    @property
+    def turn(self) -> int:
+        return self._turn
 
     @property
     def possible_actions(self) -> list:
