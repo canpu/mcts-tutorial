@@ -95,7 +95,6 @@ def select(node: Node, exploration_const: float = 1.0) -> (Action, Node):
     max_val = -math.inf
     max_actions = []
     for action, child in node.children.items():
-        # print(len(node.children))
         node_val = (child.tot_reward / child.num_samples
                     + exploration_const *
                     math.sqrt(2.0 * math.log(node.num_samples) /

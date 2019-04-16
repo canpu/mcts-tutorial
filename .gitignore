@@ -1,0 +1,4 @@
+src/.ipynb_checkpoints/
+src/__pycache__/*
+src/.nbgrader.log
+examples/__pycache__/
