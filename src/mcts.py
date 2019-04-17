@@ -181,6 +181,20 @@ class MonteCarloSearchTree:
         self._root = Node(initial_state)
         self._max_tree_depth = max_tree_depth
 
+    def _search(self, node: Node, search_depth: int = 1) -> (float, list):
+        """ Recursively search for a best sequence of actions
+        """
+        if node.is_terminal or search_depth == 0:
+            return node.tot_reward / node.num_samples, []
+        best_reward = -math.inf
+        best_act_seq = []
+        for action, child in node.children.items():
+            child_reward, child_act_seq = self._search(child, search_depth - 1)
+            if child_reward > best_reward:
+                best_act_seq = [action] + child_act_seq
+                best_reward = child_reward
+        return best_reward, best_act_seq
+
     def search_for_actions(self, search_depth: int = 1) -> list:
         """ With given initial state, obtain the best actions to take by MCTS
         :param search_depth: How many steps of actions are wanted
@@ -189,16 +203,7 @@ class MonteCarloSearchTree:
         """
         for _ in range(self._max_samples):
             execute_round(self._root, max_tree_depth=self._max_tree_depth)
-        actions = []
-        cur_node = self._root
-        for _ in range(search_depth):
-            if cur_node.is_terminal:
-                break
-            else:
-                action, child = select(cur_node, exploration_const=0.0)
-                cur_node = child
-                actions.append(action)
-        return actions
+        return self._search(self._root, search_depth)[1]
 
     def update_root(self, action: Action) -> "MonteCarloSearchTree":
         """ Update the root node to reflect the new state after an action is

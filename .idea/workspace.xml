@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="533cca82-65c2-4c2e-b620-53bcc157a65b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/maze_example_1_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/maze_example_1_result.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/.ipynb_checkpoints/pset_mcts_collaboration-sol-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/pset/.ipynb_checkpoints/pset_mcts_collaboration-sol-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pset/pset_mcts_collaboration-sol.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/pset/pset_mcts_collaboration-sol.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcts.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcts.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,7 +19,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/gomoku_example.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="223">
@@ -30,8 +34,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/maze_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="40" column="21" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="21" />
+            <state relative-caret-position="250">
+              <caret line="61" column="35" lean-forward="true" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -51,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/maze_unfinished.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="208">
+              <caret line="251" column="73" selection-start-line="251" selection-start-column="73" selection-end-line="251" selection-end-column="73" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -60,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/mcts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="133" column="23" lean-forward="true" selection-end-line="214" />
+            <state relative-caret-position="338">
+              <caret line="199" selection-start-line="199" selection-end-line="199" />
               <folding>
                 <element signature="e#728#963#0" />
               </folding>
@@ -73,12 +77,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pset/node.py">
+        <entry file="file://$PROJECT_DIR$/examples/maze_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+            <state relative-caret-position="280">
+              <caret line="64" column="42" lean-forward="true" selection-start-line="64" selection-start-column="42" selection-end-line="64" selection-end-column="42" />
               <folding>
-                <element signature="e#728#963#0" />
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -132,9 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>position</find>
-      <find>border</find>
-      <find>get_possible_positions</find>
       <find>arrowpa</find>
       <find>opaci</find>
       <find>get_bbox</find>
@@ -154,7 +155,6 @@
       <find>seed</find>
       <find>list</find>
       <find>vline</find>
-      <find>possible</find>
       <find>select</find>
       <find>name</find>
       <find>random</find>
@@ -162,6 +162,10 @@
       <find>MonteC</find>
       <find>MonteCarloSearchTreeInterface</find>
       <find>tree_depth</find>
+      <find>reward</find>
+      <find>mazestate</find>
+      <find>def po</find>
+      <find>possible</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -188,18 +192,19 @@
         <option value="$PROJECT_DIR$/src/pacman_example.py" />
         <option value="$PROJECT_DIR$/src/maze_example.py" />
         <option value="$PROJECT_DIR$/src/maze.py" />
-        <option value="$PROJECT_DIR$/src/mcts.py" />
-        <option value="$PROJECT_DIR$/examples/maze_example.py" />
         <option value="$PROJECT_DIR$/examples/gomoku_unfinished.py" />
-        <option value="$PROJECT_DIR$/examples/maze.py" />
         <option value="$PROJECT_DIR$/examples/maze_unfinished.py" />
-        <option value="$PROJECT_DIR$/pset/maze_example.py" />
         <option value="$PROJECT_DIR$/pset/node.py" />
         <option value="$PROJECT_DIR$/examples/gomoku_example.py" />
         <option value="$PROJECT_DIR$/pset/mcts_unfinished.py" />
         <option value="$PROJECT_DIR$/pset/state.py" />
         <option value="$PROJECT_DIR$/pset/mcts.py" />
         <option value="$PROJECT_DIR$/pset/gomoku_example.py" />
+        <option value="$PROJECT_DIR$/examples/maze.py" />
+        <option value="$PROJECT_DIR$/examples/maze_example.py" />
+        <option value="$PROJECT_DIR$/pset/maze_example.py" />
+        <option value="$PROJECT_DIR$/pset/maze_unfinished.py" />
+        <option value="$PROJECT_DIR$/src/mcts.py" />
       </list>
     </option>
   </component>
@@ -340,9 +345,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="43" y="-3" width="1877" height="1083" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" sideWeight="0.4018127" side_tool="true" visible="true" weight="0.24973032" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.5981873" visible="true" weight="0.24973032" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5981873" visible="true" weight="0.24973032" />
       <window_info id="Structure" order="1" sideWeight="0.50151056" side_tool="true" weight="0.24973032" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Inspection Results" weight="0.32928064" />
@@ -351,7 +357,7 @@
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928064" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32928064" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32928064" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39918947" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -487,24 +493,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/maze.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="213" selection-start-line="213" selection-end-line="220" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/maze_unfinished.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="415">
           <caret line="237" selection-start-line="237" selection-end-line="237" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/maze_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="86" column="42" selection-start-line="86" selection-start-column="4" selection-end-line="86" selection-end-column="42" />
         </state>
       </provider>
     </entry>
@@ -526,42 +518,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mcts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="133" column="23" lean-forward="true" selection-end-line="214" />
-          <folding>
-            <element signature="e#728#963#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/state.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="24" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="24" />
-          <folding>
-            <element signature="e#340#612#0" />
-            <element signature="e#340#548#1" />
-            <element signature="e#695#750#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pset/state.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pset/maze_unfinished.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -574,13 +534,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pset/pset_mcts_collaboration-sol.ipynb">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pset/maze_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="40" column="21" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="21" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pset/node.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -608,6 +561,62 @@
           <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
           <folding>
             <element signature="e#0#6#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/maze_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="64" column="42" lean-forward="true" selection-start-line="64" selection-start-column="42" selection-end-line="64" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/maze.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="263" column="67" lean-forward="true" selection-start-line="256" selection-start-column="8" selection-end-line="263" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pset/maze_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="61" column="35" lean-forward="true" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pset/maze_unfinished.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="251" column="73" selection-start-line="251" selection-start-column="73" selection-end-line="251" selection-end-column="73" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/state.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="24" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="24" />
+          <folding>
+            <element signature="e#340#612#0" />
+            <element signature="e#340#548#1" />
+            <element signature="e#695#750#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mcts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="199" selection-start-line="199" selection-end-line="199" />
+          <folding>
+            <element signature="e#728#963#0" />
           </folding>
         </state>
       </provider>
