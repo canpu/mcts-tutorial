@@ -2,3 +2,5 @@ src/.ipynb_checkpoints/
 src/__pycache__/*
 src/.nbgrader.log
 examples/__pycache__/
+.ipynb_checkpoints/*
+.nbgrader.log
