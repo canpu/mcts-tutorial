@@ -249,14 +249,7 @@ class UnfinishedMazeState(AbstractState):
 
     @property
     def possible_actions(self) -> list:
-        i, j = self._paths[self._turn][-1]
-        actions = [MazeAction(self._turn, (i + 1, j)),
-                   MazeAction(self._turn, (i - 1, j)),
-                   MazeAction(self._turn, (i, j + 1)),
-                   MazeAction(self._turn, (i, j - 1))]
-        return [MazeAction(self._turn, action.position) for action in actions if
-                self.is_in_range(action.position) and
-                action.position not in self._environment.obstacles]
+        raise Exception("The property possible_actions is not implemented")
 
     def visualize(self, file_name=None, fig_size: (float, float) = (6.5, 6.5),
                   size_auv_path: float = 0.8, size_max_radius: float = 0.3,
@@ -335,8 +328,6 @@ class UnfinishedMazeState(AbstractState):
                                    ydata=(y + 0.5, y_p + 0.5),
                                    linewidth=size_auv_path * 10,
                                    color=color_auv_path, zorder=z['auv_path']))
-
-
 
         # Plotting
         plt.title('AUV Trajectory \n Accumulated Reward: ' + str(self.reward),

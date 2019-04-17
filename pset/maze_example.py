@@ -30,7 +30,7 @@ def gen_obstacles():
     return obstacles
 
 
-def maze_example_1():
+def maze_example_1(state_class):
     obstacles = gen_obstacles()
     targets = {(6, 3): 3, (4, 8): 3, (2, 3): 3, (14, 4): 3, (15, 8): 3,
                (17, 3): 3, (9, 12): 3, (14, 14): 3, (8, 16): 3, (11, 11): 1,
@@ -38,12 +38,12 @@ def maze_example_1():
                (16, 12): 1, (11, 16): 1, (18, 4): 1}
     env = MazeEnvironment(xlim=(0, 20), ylim=(0, 20), obstacles=obstacles,
                           targets=targets, is_border_obstacle_filled=True)
-    state = MazeState(environment=env, time_remains=15)
+    state = state_class(environment=env, time_remains=15)
     state.add_agent((7, 7)).add_agent((13, 8)).add_agent((12, 12))
     return state
 
 
-def maze_example_2():
+def maze_example_2(state_class):
     obstacles = gen_obstacles()
     targets = {(17, 2): 10, (4, 19): 10, (2, 3): 10,
                (9, 11): 1, (13, 12): 1, (14, 13): 1, (16, 15): 1,
@@ -54,15 +54,14 @@ def maze_example_2():
                (19, 11): 4}
     env = MazeEnvironment(xlim=(0, 20), ylim=(0, 20), obstacles=obstacles,
                           targets=targets, is_border_obstacle_filled=True)
-    state = UnfinishedMazeState(environment=env, time_remains=15)
+    state = state_class(environment=env, time_remains=15)
     state.add_agent((7, 7)).add_agent((13, 8)).add_agent((12, 12))
     return state
 
 
-def simulate(initial_state: UnfinishedMazeState, rand_seed: int = 0)\
-        -> UnfinishedMazeState:
-    mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15,
-                                samples=1000)
+def simulate(mcts_class, initial_state: UnfinishedMazeState,
+             rand_seed: int = 0) -> UnfinishedMazeState:
+    mcts = mcts_class(initial_state, max_tree_depth=15, samples=1000)
     random.seed(rand_seed)
     state = initial_state.__copy__()
     time = 0
