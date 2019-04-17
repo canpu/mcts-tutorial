@@ -1,5 +1,4 @@
-from maze import *
-from mcts import *
+from maze_unfinished import *
 
 
 def line(start: (int, int), increment: (int, int), length: int) -> set:
@@ -55,12 +54,13 @@ def maze_example_2():
                (19, 11): 4}
     env = MazeEnvironment(xlim=(0, 20), ylim=(0, 20), obstacles=obstacles,
                           targets=targets, is_border_obstacle_filled=True)
-    state = MazeState(environment=env, time_remains=15)
+    state = UnfinishedMazeState(environment=env, time_remains=15)
     state.add_agent((7, 7)).add_agent((13, 8)).add_agent((12, 12))
     return state
 
 
-def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
+def simulate(initial_state: UnfinishedMazeState, rand_seed: int = 0)\
+        -> UnfinishedMazeState:
     mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15,
                                 samples=1000)
     random.seed(rand_seed)
@@ -78,10 +78,3 @@ def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
             if state.is_terminal:
                 break
     return state
-
-
-if __name__ == "__main__":
-    print("===== Start of Example 1 =====")
-    simulate(maze_example_1()).visualize()
-    print("\n===== Start of Example 2 =====")
-    simulate(maze_example_2()).visualize()
