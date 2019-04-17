@@ -1,6 +1,7 @@
 import math
 import random
-from state import AbstractState as State, AbstractAction as Action
+from state import AbstractState  as State
+from state import AbstractAction as Action
 
 
 class Node(object):
