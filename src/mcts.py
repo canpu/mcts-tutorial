@@ -1,6 +1,6 @@
 import math
 import random
-from src.state import AbstractState as State, AbstractAction as Action
+from state import AbstractState as State, AbstractAction as Action
 
 
 class Node(object):
@@ -184,8 +184,11 @@ class MonteCarloSearchTree:
     def _search(self, node: Node, search_depth: int = 1) -> (float, list):
         """ Recursively search for a best sequence of actions
         """
-        if node.is_terminal or search_depth == 0:
+        if not node.children or search_depth == 0:
             return node.tot_reward / node.num_samples, []
+        elif search_depth == 1:
+            action, child = select(node, exploration_const=0.0)
+            return child.tot_reward / child.num_samples, [action]
         best_reward = -math.inf
         best_act_seq = []
         for action, child in node.children.items():
@@ -203,6 +206,16 @@ class MonteCarloSearchTree:
         """
         for _ in range(self._max_samples):
             execute_round(self._root, max_tree_depth=self._max_tree_depth)
+        # actions = []
+        # cur_node = self._root
+        # for _ in range(search_depth):
+        #     if cur_node.is_terminal:
+        #         break
+        #     else:
+        #         action, child = select(cur_node, exploration_const=0.0)
+        #         cur_node = child
+        #         actions.append(action)
+        # return actions
         return self._search(self._root, search_depth)[1]
 
     def update_root(self, action: Action) -> "MonteCarloSearchTree":
