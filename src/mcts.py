@@ -249,12 +249,16 @@ class MonteCarloSearchTree:
                 best_reward = child_reward
         return best_reward, best_act_seq
 
-    def search_for_actions(self, search_depth: int = 1) -> list:
+    def search_for_actions(self, search_depth: int = 1,
+                           random_seed: int = None) -> list:
         """ With given initial state, obtain the best actions to take by MCTS
         :param search_depth: How many steps of actions are wanted
+        :param random_seed: When not None, set the random seed before running
         :return: The best actions
         :rtype: A list of AbstractAction objects
         """
+        if random_seed is not None:
+            random.seed(random_seed)
         for _ in range(self._max_samples):
             execute_round(self._root, max_tree_depth=self._max_tree_depth,
                           tree_select_policy=self._tree_select_policy,

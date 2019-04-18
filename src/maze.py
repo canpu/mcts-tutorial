@@ -1,4 +1,4 @@
-from src.state import *
+from state import *
 import random
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -211,6 +211,15 @@ class MazeState(AbstractState):
                 reward += self._environment.rewards[target_position]
         return reward
 
+    def switch_agent(self) -> "MazeState":
+        """ After the movement of one agent, it would be the turn of the next
+            agent
+        """
+        self._turn = (self._turn + 1) % len(self._paths)
+        if self._turn == 0:  # When all agents have taken a turn of actions
+            self._time_remains -= 1
+        return self
+
     @property
     def time_remains(self) -> int:
         return self._time_remains
@@ -221,16 +230,17 @@ class MazeState(AbstractState):
         """
         return self._time_remains <= 0
 
+    @property
+    def turn(self) -> int:
+        return self._turn
+
     def take_action(self, action: MazeAction) -> "MazeState":
         """ Execute the action based on the current state
         :param action: The action
         :return: The updated state
         """
         self._paths[self._turn].append(action.position)
-        self._turn = (self._turn + 1) % len(self._paths)
-        if self._turn == 0:  # When all agents have taken a turn of actions
-            self._time_remains -= 1
-        return self
+        return self.switch_agent()
 
     def execute_action(self, action: MazeAction) -> "MazeState":
         """ Make a copy of the current state, execute the action and return the

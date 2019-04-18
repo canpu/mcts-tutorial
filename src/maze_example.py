@@ -83,5 +83,5 @@ def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
 if __name__ == "__main__":
     print("===== Start of Example 1 =====")
     simulate(maze_example_1()).visualize()
-    print("\n===== Start of Example 1 =====")
+    print("\n===== Start of Example 2 =====")
     simulate(maze_example_2()).visualize()

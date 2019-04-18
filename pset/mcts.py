@@ -120,10 +120,10 @@ def execute_round(root: Node, tree_select_policy, tree_expand_policy,
 
 
 class MonteCarloSearchTree:
-    def __init__(self, initial_state: State,  tree_select_policy,
-                 tree_expand_policy, rollout_policy,
-                 backpropagate_method, samples: int = 1000,
-                 exploration_const: float = 1.0, max_tree_depth: int = 10):
+    def __init__(self, initial_state: State, tree_select_policy,
+                 tree_expand_policy, rollout_policy, backpropagate_method,
+                 samples: int = 1000, exploration_const: float = 1.0,
+                 max_tree_depth: int = 10):
         """ Create a MonteCarloSearchTree object
         :param initial_state: The initial state
         :param samples: The number of samples to generate to obtain the best
@@ -165,11 +165,18 @@ class MonteCarloSearchTree:
         if not node.children or search_depth == 0:
             return node.tot_reward / node.num_samples, []
         elif search_depth == 1:
-            action = max(node.children.keys(),
-                         key=lambda act: node.children[act].tot_reward /
-                         node.children[act].num_samples)
-            child = node.children[action]
-            return child.tot_reward / child.num_samples, [action]
+            max_val = -math.inf
+            max_actions = []
+            for action, child in node.children.items():
+                node_val = child.tot_reward / child.num_samples
+                if node_val > max_val:
+                    max_val = node_val
+                    max_actions = [action]
+                elif node_val == max_val:
+                    max_actions.append(action)
+            max_action = random.choice(max_actions)
+            child = node.children[max_action]
+            return child.tot_reward / child.num_samples, [max_action]
         best_reward = -math.inf
         best_act_seq = []
         for action, child in node.children.items():
@@ -179,12 +186,16 @@ class MonteCarloSearchTree:
                 best_reward = child_reward
         return best_reward, best_act_seq
 
-    def search_for_actions(self, search_depth: int = 1) -> list:
+    def search_for_actions(self, search_depth: int = 1,
+                           random_seed: int = None) -> list:
         """ With given initial state, obtain the best actions to take by MCTS
         :param search_depth: How many steps of actions are wanted
+        :param random_seed: When not None, set the random seed before running
         :return: The best actions
         :rtype: A list of AbstractAction objects
         """
+        if random_seed is not None:
+            random.seed(random_seed)
         for _ in range(self._max_samples):
             execute_round(self._root, max_tree_depth=self._max_tree_depth,
                           tree_select_policy=self._tree_select_policy,
