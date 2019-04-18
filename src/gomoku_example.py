@@ -25,11 +25,12 @@ def gomoku_example_solution() -> GomokuState:
     return suggested_state
 
 
-def gomoku_example_simulate(black_heuristics: bool = False,
+def gomoku_example_simulate(select_policy, expand_policy,
+                            simulate_policy, backpropagate_policy,
+                            black_heuristics: bool = False,
                             white_heuristics: bool = True,
                             samples_per_step: int = 1000,
                             random_seed: int = 0) -> GomokuState:
-    random.seed(random_seed)
     black_state = gomoku_example().__copy__()
     black_state.heuristics = black_heuristics
     black_state.side = 0
@@ -38,12 +39,22 @@ def gomoku_example_simulate(black_heuristics: bool = False,
     white_state.side = 1
 
     black_mcts = MonteCarloSearchTree(black_state, samples=samples_per_step,
-                                      max_tree_depth=8)
+                                      max_tree_depth=15,
+                                      tree_select_policy=select_policy,
+                                      tree_expand_policy=expand_policy,
+                                      rollout_policy=simulate_policy,
+                                      backpropagate_method=backpropagate_policy)
     white_mcts = MonteCarloSearchTree(white_state, samples=samples_per_step,
-                                      max_tree_depth=8)
+                                      max_tree_depth=15,
+                                      tree_select_policy=select_policy,
+                                      tree_expand_policy=expand_policy,
+                                      rollout_policy=simulate_policy,
+                                      backpropagate_method=backpropagate_policy)
     while not black_state.is_terminal:
         # Black goes
-        black_action = black_mcts.search_for_actions(search_depth=1)[0]
+        black_action = black_mcts.search_for_actions(search_depth=1,
+                                                     random_seed=random_seed)[0]
+        random_seed += 1
         print(black_action)
         black_mcts.update_root(black_action)
         white_mcts.update_root(black_action)
@@ -52,7 +63,9 @@ def gomoku_example_simulate(black_heuristics: bool = False,
 
         if not black_state.is_terminal:
             # White goes
-            white_action = white_mcts.search_for_actions(search_depth=1)[0]
+            white_action = white_mcts.search_for_actions(
+                search_depth=1, random_seed=random_seed)[0]
+            random_seed += 1
             print(white_action)
             black_mcts.update_root(white_action)
             white_mcts.update_root(white_action)
@@ -62,25 +75,53 @@ def gomoku_example_simulate(black_heuristics: bool = False,
     return black_state
 
 
-def simulate_with_black_sample_arbitrarily() -> None:
+def simulate_with_black_sample_arbitrarily(select_policy, expand_policy,
+                                           simulate_policy,
+                                           backpropagate_policy,
+                                           random_seed: int = 1000,
+                                           num_iters: int = 1000) -> None:
     """ The black player estimates possible locations with uniform distribution
         anywhere on the board
     """
-    (gomoku_example_simulate(black_heuristics=False, white_heuristics=True
-                             , random_seed=1000).visualize())
+    (gomoku_example_simulate(black_heuristics=False, white_heuristics=True,
+                             random_seed=random_seed,
+                             select_policy=select_policy,
+                             expand_policy=expand_policy,
+                             simulate_policy=simulate_policy,
+                             backpropagate_policy=backpropagate_policy,
+                             samples_per_step=num_iters)
+     .visualize())
 
 
-def simulate_with_black_sample_neighborhood() -> None:
+def simulate_with_black_sample_neighborhood(select_policy, expand_policy,
+                                            simulate_policy,
+                                            backpropagate_policy,
+                                            random_seed: int = 0,
+                                            num_iters: int = 1000) -> None:
     """ The black player estimates possible locations only if a position's
         neighbor is not totally unoccupied
     """
     (gomoku_example_simulate(black_heuristics=True, white_heuristics=True,
-                             random_seed=500).visualize())
+                             random_seed=random_seed,
+                             select_policy=select_policy,
+                             expand_policy=expand_policy,
+                             simulate_policy=simulate_policy,
+                             backpropagate_policy=backpropagate_policy,
+                             samples_per_step=num_iters)
+     .visualize())
 
 
 if __name__ == '__main__':
     print("===== Start of Simulation 1 =====")
-    simulate_with_black_sample_arbitrarily()
+    simulate_with_black_sample_arbitrarily(select, expand,
+                                           default_rollout_policy,
+                                           backpropagate,
+                                           random_seed=1000,
+                                           num_iters=1000)
 
     print("\n===== Start of Simulation 2 =====")
-    simulate_with_black_sample_neighborhood()
+    simulate_with_black_sample_neighborhood(select, expand,
+                                            default_rollout_policy,
+                                            backpropagate,
+                                            random_seed=1000,
+                                            num_iters=1000)
