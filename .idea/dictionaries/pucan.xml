@@ -8,6 +8,7 @@
       <w>deepskyblue</w>
       <w>fontname</w>
       <w>gomoku</w>
+      <w>iters</w>
       <w>matplotlib</w>
       <w>mcts</w>
       <w>pacman</w>

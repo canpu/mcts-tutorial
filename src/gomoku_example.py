@@ -1,6 +1,5 @@
 from gomoku import *
 from mcts import *
-from mcts import select
 
 
 def gomoku_example() -> GomokuState:
@@ -40,13 +39,13 @@ def gomoku_example_simulate(select_policy, expand_policy,
     white_state.side = 1
 
     black_mcts = MonteCarloSearchTree(black_state, samples=samples_per_step,
-                                      max_tree_depth=8,
+                                      max_tree_depth=15,
                                       tree_select_policy=select_policy,
                                       tree_expand_policy=expand_policy,
                                       rollout_policy=simulate_policy,
                                       backpropagate_method=backpropagate_policy)
     white_mcts = MonteCarloSearchTree(white_state, samples=samples_per_step,
-                                      max_tree_depth=8,
+                                      max_tree_depth=15,
                                       tree_select_policy=select_policy,
                                       tree_expand_policy=expand_policy,
                                       rollout_policy=simulate_policy,
@@ -78,29 +77,37 @@ def gomoku_example_simulate(select_policy, expand_policy,
 
 def simulate_with_black_sample_arbitrarily(select_policy, expand_policy,
                                            simulate_policy,
-                                           backpropagate_policy) -> None:
+                                           backpropagate_policy,
+                                           random_seed: int = 1000,
+                                           num_iters: int = 1000) -> None:
     """ The black player estimates possible locations with uniform distribution
         anywhere on the board
     """
     (gomoku_example_simulate(black_heuristics=False, white_heuristics=True,
-                             random_seed=400, select_policy=select_policy,
+                             random_seed=random_seed,
+                             select_policy=select_policy,
                              expand_policy=expand_policy,
                              simulate_policy=simulate_policy,
-                             backpropagate_policy=backpropagate_policy)
+                             backpropagate_policy=backpropagate_policy,
+                             samples_per_step=num_iters)
      .visualize())
 
 
 def simulate_with_black_sample_neighborhood(select_policy, expand_policy,
                                             simulate_policy,
-                                            backpropagate_policy) -> None:
+                                            backpropagate_policy,
+                                            random_seed: int = 0,
+                                            num_iters: int = 1000) -> None:
     """ The black player estimates possible locations only if a position's
         neighbor is not totally unoccupied
     """
     (gomoku_example_simulate(black_heuristics=True, white_heuristics=True,
-                             random_seed=0, select_policy=select_policy,
+                             random_seed=random_seed,
+                             select_policy=select_policy,
                              expand_policy=expand_policy,
                              simulate_policy=simulate_policy,
-                             backpropagate_policy=backpropagate_policy)
+                             backpropagate_policy=backpropagate_policy,
+                             samples_per_step=num_iters)
      .visualize())
 
 
@@ -108,9 +115,13 @@ if __name__ == '__main__':
     print("===== Start of Simulation 1 =====")
     simulate_with_black_sample_arbitrarily(select, expand,
                                            default_rollout_policy,
-                                           backpropagate)
+                                           backpropagate,
+                                           random_seed=1000,
+                                           num_iters=1000)
 
     print("\n===== Start of Simulation 2 =====")
     simulate_with_black_sample_neighborhood(select, expand,
                                             default_rollout_policy,
-                                            backpropagate)
+                                            backpropagate,
+                                            random_seed=1000,
+                                            num_iters=1000)

@@ -77,27 +77,35 @@ def gomoku_example_simulate(select_policy, expand_policy,
 
 def simulate_with_black_sample_arbitrarily(select_policy, expand_policy,
                                            simulate_policy,
-                                           backpropagate_policy) -> None:
+                                           backpropagate_policy,
+                                           random_seed: int = 1000,
+                                           num_iters: int = 1000) -> None:
     """ The black player estimates possible locations with uniform distribution
         anywhere on the board
     """
     (gomoku_example_simulate(black_heuristics=False, white_heuristics=True,
-                             random_seed=400, select_policy=select_policy,
+                             random_seed=random_seed,
+                             select_policy=select_policy,
                              expand_policy=expand_policy,
                              simulate_policy=simulate_policy,
-                             backpropagate_policy=backpropagate_policy)
+                             backpropagate_policy=backpropagate_policy,
+                             samples_per_step=num_iters)
      .visualize())
 
 
 def simulate_with_black_sample_neighborhood(select_policy, expand_policy,
                                             simulate_policy,
-                                            backpropagate_policy) -> None:
+                                            backpropagate_policy,
+                                            random_seed: int = 0,
+                                            num_iters: int = 0) -> None:
     """ The black player estimates possible locations only if a position's
         neighbor is not totally unoccupied
     """
     (gomoku_example_simulate(black_heuristics=True, white_heuristics=True,
-                             random_seed=0, select_policy=select_policy,
+                             random_seed=random_seed,
+                             select_policy=select_policy,
                              expand_policy=expand_policy,
                              simulate_policy=simulate_policy,
-                             backpropagate_policy=backpropagate_policy)
+                             backpropagate_policy=backpropagate_policy,
+                             samples_per_step=num_iters)
      .visualize())
