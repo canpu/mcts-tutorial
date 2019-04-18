@@ -234,14 +234,6 @@ class MazeState(AbstractState):
     def turn(self) -> int:
         return self._turn
 
-    def take_action(self, action: MazeAction) -> "MazeState":
-        """ Execute the action based on the current state
-        :param action: The action
-        :return: The updated state
-        """
-        self._paths[self._turn].append(action.position)
-        return self.switch_agent()
-
     def execute_action(self, action: MazeAction) -> "MazeState":
         """ Make a copy of the current state, execute the action and return the
             new state
@@ -249,7 +241,8 @@ class MazeState(AbstractState):
         :return: A copy of the new state
         """
         new_state = self.__copy__()
-        new_state.take_action(action)
+        new_state.paths[new_state.turn].append(action.position)
+        new_state.switch_agent()
         return new_state
 
     @property

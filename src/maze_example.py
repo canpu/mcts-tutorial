@@ -78,7 +78,7 @@ def simulate(mcts_select_policy, mcts_expand_policy, mcts_rollout_policy,
         for i in range(len(state.paths)):
             action = actions[i]
             print(action)
-            state.take_action(action)
+            state = state.execute_action(action)
             mcts.update_root(action)
             if state.is_terminal:
                 break
