@@ -2,27 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="533cca82-65c2-4c2e-b620-53bcc157a65b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/mcts.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/mcts.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/gomoku.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/gomoku_example.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/gomoku_example_black_wins.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/gomoku_example_black_wins.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/gomoku_example_initial_state.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/gomoku_example_initial_state.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/gomoku_example_simulation_result_black_takes_any_moves.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/gomoku_example_simulation_result_black_takes_any_moves.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/gomoku_example_simulation_result_black_takes_neighboring_moves.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/gomoku_example_simulation_result_black_takes_neighboring_moves.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/maze_example_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/maze_example_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/maze_example_1_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/maze_example_1_result.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/maze_example_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/maze_example_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/img/maze_example_2_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/maze_example_2_result.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/maze.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/maze_example.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pset/gomoku_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/pset/gomoku_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pset/mcts.py" beforeDir="false" afterPath="$PROJECT_DIR$/pset/mcts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gomoku_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/gomoku_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/maze.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/maze.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/maze_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/maze_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcts.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcts.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/gomoku_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="86" column="45" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
+            <state relative-caret-position="490">
+              <caret line="98" column="42" lean-forward="true" selection-start-line="98" selection-start-column="42" selection-end-line="98" selection-end-column="42" />
               <folding>
                 <element signature="e#78#604#0" />
                 <element signature="e#78#252#1" />
@@ -103,11 +86,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gomoku_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="110" column="57" lean-forward="true" selection-start-line="110" selection-start-column="57" selection-end-line="110" selection-end-column="57" />
+            <state relative-caret-position="340">
+              <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -207,8 +190,8 @@
         <option value="$PROJECT_DIR$/examples/gomoku_example.py" />
         <option value="$PROJECT_DIR$/src/mcts.py" />
         <option value="$PROJECT_DIR$/pset/mcts.py" />
-        <option value="$PROJECT_DIR$/src/gomoku_example.py" />
         <option value="$PROJECT_DIR$/pset/gomoku_example.py" />
+        <option value="$PROJECT_DIR$/src/gomoku_example.py" />
       </list>
     </option>
   </component>
@@ -346,9 +329,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="43" y="-3" width="1877" height="1083" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" sideWeight="0.4018127" side_tool="true" visible="true" weight="0.24973032" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.5981873" visible="true" weight="0.24973032" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5981873" visible="true" weight="0.24973032" />
       <window_info id="Structure" order="1" sideWeight="0.50151056" side_tool="true" weight="0.24973032" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Inspection Results" weight="0.32928064" />
@@ -357,7 +341,7 @@
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928064" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32928064" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32928064" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39918947" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -637,24 +621,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gomoku_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="110" column="57" lean-forward="true" selection-start-line="110" selection-start-column="57" selection-end-line="110" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pset/gomoku_example.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="86" column="45" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
+        <state relative-caret-position="490">
+          <caret line="98" column="42" lean-forward="true" selection-start-line="98" selection-start-column="42" selection-end-line="98" selection-end-column="42" />
           <folding>
             <element signature="e#78#604#0" />
             <element signature="e#78#252#1" />
             <element signature="e#657#937#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gomoku_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>

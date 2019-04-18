@@ -82,7 +82,7 @@ def simulate_with_black_sample_arbitrarily(select_policy, expand_policy,
         anywhere on the board
     """
     (gomoku_example_simulate(black_heuristics=False, white_heuristics=True,
-                             random_seed=1, select_policy=select_policy,
+                             random_seed=400, select_policy=select_policy,
                              expand_policy=expand_policy,
                              simulate_policy=simulate_policy,
                              backpropagate_policy=backpropagate_policy)
@@ -96,7 +96,7 @@ def simulate_with_black_sample_neighborhood(select_policy, expand_policy,
         neighbor is not totally unoccupied
     """
     (gomoku_example_simulate(black_heuristics=True, white_heuristics=True,
-                             random_seed=1000, select_policy=select_policy,
+                             random_seed=0, select_policy=select_policy,
                              expand_policy=expand_policy,
                              simulate_policy=simulate_policy,
                              backpropagate_policy=backpropagate_policy)
