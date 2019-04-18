@@ -25,7 +25,8 @@ def gomoku_example_solution() -> GomokuState:
     return suggested_state
 
 
-def gomoku_example_simulate(mcts_class,
+def gomoku_example_simulate(mcts_class, select_policy, expand_policy,
+                            simulate_policy, backpropagate_policy,
                             black_heuristics: bool = False,
                             white_heuristics: bool = True,
                             samples_per_step: int = 1000,
@@ -39,7 +40,8 @@ def gomoku_example_simulate(mcts_class,
     white_state.side = 1
 
     black_mcts = mcts_class(black_state, samples=samples_per_step,
-                            max_tree_depth=8)
+                            max_tree_depth=8, select_policy=select_policy,
+                            expand_policy=expand_policy, simulate_policy=simulate_policy, backpropagate_policy=backpropagate_policy)
     white_mcts = mcts_class(white_state, samples=samples_per_step,
                             max_tree_depth=8)
     while not black_state.is_terminal:
@@ -63,15 +65,20 @@ def gomoku_example_simulate(mcts_class,
     return black_state
 
 
-def simulate_with_black_sample_arbitrarily(mcts_class) -> None:
+def simulate_with_black_sample_arbitrarily(mcts_class, select_policy,
+                                           expand_policy, simulation_policy,
+                                           backpropagate_policy) -> None:
     """ The black player estimates possible locations with uniform distribution
         anywhere on the board
     """
     (gomoku_example_simulate(mcts_class, black_heuristics=False,
-                             white_heuristics=True, seed=1000).visualize())
+                             white_heuristics=True, seed=1000,
+                             select_policy=select_policy).visualize())
 
 
-def simulate_with_black_sample_neighborhood(mcts_class) -> None:
+def simulate_with_black_sample_neighborhood(mcts_class, select_policy,
+                                           expand_policy, simulation_policy,
+                                           backpropagate_policy) -> None:
     """ The black player estimates possible locations only if a position's
         neighbor is not totally unoccupied
     """

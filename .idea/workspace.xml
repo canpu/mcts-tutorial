@@ -3,9 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="533cca82-65c2-4c2e-b620-53bcc157a65b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/gomoku_example_simulation_result_black_takes_any_moves.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/gomoku_example_simulation_result_black_takes_any_moves.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/maze_example_2_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/maze_example_2_result.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pset_mcts_collaboration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/pset_mcts_collaboration.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/gomoku_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/gomoku_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/maze_example_1_result.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/gomoku_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/pset/gomoku_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/img/maze_example_1_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/pset/img/maze_example_1_result.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/img/maze_example_2_result.png" beforeDir="false" afterPath="$PROJECT_DIR$/pset/img/maze_example_2_result.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/mcts.py" beforeDir="false" afterPath="$PROJECT_DIR$/pset/mcts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/node.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gomoku_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/gomoku_example.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcts.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcts.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,11 +28,32 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/gomoku_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+            <state relative-caret-position="645">
+              <caret line="43" column="131" selection-start-line="43" selection-start-column="131" selection-end-line="43" selection-end-column="131" />
               <folding>
                 <element signature="e#0#6#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gomoku_example.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1260">
+              <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
+              <folding>
+                <element signature="e#0#20#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pset/mcts.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="122" column="64" selection-start-line="122" selection-start-column="46" selection-end-line="122" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -64,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mcts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="518">
-              <caret line="199" lean-forward="true" selection-start-line="199" selection-end-line="199" />
+            <state relative-caret-position="400">
+              <caret line="239" column="31" selection-start-line="239" selection-start-column="31" selection-end-line="239" selection-end-column="31" />
               <folding>
                 <element signature="e#728#963#0" />
               </folding>
@@ -76,26 +103,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/maze_example.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="78" column="21" lean-forward="true" selection-start-line="78" selection-start-column="21" selection-end-line="78" selection-end-column="21" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/examples/gomoku_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
+            <state relative-caret-position="535">
+              <caret line="111" column="49" lean-forward="true" selection-start-line="111" selection-start-column="49" selection-end-line="111" selection-end-column="49" />
               <folding>
                 <element signature="e#83#609#0" />
                 <element signature="e#83#257#1" />
+                <element signature="e#662#942#0" />
               </folding>
             </state>
           </provider>
@@ -104,15 +120,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+            <state relative-caret-position="180">
+              <caret line="12" column="5" lean-forward="true" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pset/pset_mcts_collaboration-sol.ipynb">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -159,7 +170,6 @@
       <find>seed</find>
       <find>list</find>
       <find>vline</find>
-      <find>select</find>
       <find>name</find>
       <find>random</find>
       <find>random_seed</find>
@@ -170,6 +180,7 @@
       <find>def po</find>
       <find>possible</find>
       <find>mazestate</find>
+      <find>select</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -179,7 +190,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/gomoku.py" />
-        <option value="$PROJECT_DIR$/src/gomoku_example.py" />
         <option value="$PROJECT_DIR$/src/trial.py" />
         <option value="$PROJECT_DIR$/maze.py" />
         <option value="$PROJECT_DIR$/src/Target.py" />
@@ -201,14 +211,15 @@
         <option value="$PROJECT_DIR$/pset/node.py" />
         <option value="$PROJECT_DIR$/pset/mcts_unfinished.py" />
         <option value="$PROJECT_DIR$/pset/state.py" />
-        <option value="$PROJECT_DIR$/pset/mcts.py" />
-        <option value="$PROJECT_DIR$/pset/gomoku_example.py" />
         <option value="$PROJECT_DIR$/examples/maze.py" />
         <option value="$PROJECT_DIR$/examples/maze_example.py" />
         <option value="$PROJECT_DIR$/pset/maze_example.py" />
         <option value="$PROJECT_DIR$/pset/maze_unfinished.py" />
-        <option value="$PROJECT_DIR$/examples/gomoku_example.py" />
         <option value="$PROJECT_DIR$/src/mcts.py" />
+        <option value="$PROJECT_DIR$/src/gomoku_example.py" />
+        <option value="$PROJECT_DIR$/pset/mcts.py" />
+        <option value="$PROJECT_DIR$/pset/gomoku_example.py" />
+        <option value="$PROJECT_DIR$/examples/gomoku_example.py" />
       </list>
     </option>
   </component>
@@ -518,13 +529,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pset/pset_mcts_collaboration-sol.ipynb">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -544,16 +548,6 @@
           <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pset/gomoku_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#6#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -594,21 +588,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/gomoku_example.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
-          <folding>
-            <element signature="e#83#609#0" />
-            <element signature="e#83#257#1" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/maze_example.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="355">
-          <caret line="78" column="21" lean-forward="true" selection-start-line="78" selection-start-column="21" selection-end-line="78" selection-end-column="21" />
+          <caret line="78" column="21" selection-start-line="78" selection-start-column="21" selection-end-line="78" selection-end-column="21" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -617,10 +600,56 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mcts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
-          <caret line="199" lean-forward="true" selection-start-line="199" selection-end-line="199" />
+        <state relative-caret-position="400">
+          <caret line="239" column="31" selection-start-line="239" selection-start-column="31" selection-end-line="239" selection-end-column="31" />
           <folding>
             <element signature="e#728#963#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gomoku_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="5" lean-forward="true" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pset/mcts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="122" column="64" selection-start-line="122" selection-start-column="46" selection-end-line="122" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pset/gomoku_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="43" column="131" selection-start-line="43" selection-start-column="131" selection-end-line="43" selection-end-column="131" />
+          <folding>
+            <element signature="e#0#6#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/gomoku_example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="535">
+          <caret line="111" column="49" lean-forward="true" selection-start-line="111" selection-start-column="49" selection-end-line="111" selection-end-column="49" />
+          <folding>
+            <element signature="e#83#609#0" />
+            <element signature="e#83#257#1" />
+            <element signature="e#662#942#0" />
           </folding>
         </state>
       </provider>
