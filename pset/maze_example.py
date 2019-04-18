@@ -1,4 +1,5 @@
 from maze_unfinished import *
+from mcts import *
 
 
 def line(start: (int, int), increment: (int, int), length: int) -> set:
@@ -59,11 +60,16 @@ def maze_example_2(state_class):
     return state
 
 
-def simulate(mcts_class, initial_state: UnfinishedMazeState,
-             rand_seed: int = 0) -> UnfinishedMazeState:
-    mcts = mcts_class(initial_state, max_tree_depth=15, samples=1000)
+def simulate(mcts_select_policy, mcts_expand_policy, mcts_rollout_policy,
+             mcts_backpropagate_policy, initial_state: AbstractState,
+             rand_seed: int = 0) -> AbstractState:
+    mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15, samples=1000,
+                                tree_select_policy=mcts_select_policy,
+                                tree_expand_policy=mcts_expand_policy,
+                                rollout_policy=mcts_rollout_policy,
+                                backpropagate_method=mcts_backpropagate_policy)
     random.seed(rand_seed)
-    state = initial_state.__copy__()
+    state = deepcopy(initial_state)
     time = 0
     while not state.is_terminal:
         actions = mcts.search_for_actions(search_depth=3)
@@ -72,7 +78,7 @@ def simulate(mcts_class, initial_state: UnfinishedMazeState,
         for i in range(len(state.paths)):
             action = actions[i]
             print(action)
-            state.take_action(action)
+            state = state.execute_action(action)
             mcts.update_root(action)
             if state.is_terminal:
                 break
