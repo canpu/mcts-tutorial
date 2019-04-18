@@ -25,8 +25,8 @@ def test_expand(expand):
     return True
 
 
-def test_simulate(simulate):
-    """if simulate method is implemented correctly"""
+def test_default_rollout_policy(default_rollout_policy):
+    """if default_rollout_policy method is implemented correctly"""
     # TODO 
     return True
 
@@ -37,25 +37,25 @@ def test_backpropagate(backpropagate):
     return True
 
 
-def test_reward(reward):
+def test_reward(MazeState):
     """if reward method is implemented correctly"""
     # TODO 
     return True
 
 
-def test_is_terminal(is_terminal):
+def test_is_terminal(MazeState):
     """if is_terminal method is implemented correctly"""
     # TODO 
     return True
 
 
-def test_possible_actions(possible_actions):
+def test_possible_actions(MazeState):
     """if possible_actions method is implemented correctly"""
     # TODO 
     return True
 
 
-def test_take_action(take_action):
+def test_take_action(MazeState):
     """if take_action method is implemented correctly"""
     # TODO 
     return True
