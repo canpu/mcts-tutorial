@@ -160,7 +160,7 @@ class UnfinishedMazeState(AbstractState):
         """ Create a state of the AUV reward-collection game
         """
         if time_remains < 0:
-            raise ValueError("The remaining time cannot be negative")
+            raise ValueError("The remai ning time cannot be negative")
         self._paths = []
         self._environment = environment
         self._time_remains = time_remains
@@ -347,110 +347,3 @@ class UnfinishedMazeState(AbstractState):
             plt.savefig(file_name)
 
         return fig
-
-
-class MazeState(UnfinishedMazeState):
-
-    def __init__(self, environment: MazeEnvironment, time_remains: int = 10):
-        """ Create a state of the AUV reward-collection game
-        """
-        super().__init__(environment, time_remains)
-
-    @property
-    def reward(self) -> float:
-        """ The total reward at the current state is value of
-            rewards that have been visited by agents
-        """
-        ### BEGIN SOLUTION
-        reward = 0.0
-        for target_position in self._environment.rewards:
-            if target_position in self.visited:
-                reward += self.environment.rewards[target_position]
-        return reward
-        ### END SOLUTION
-
-    @property
-    def is_terminal(self) -> bool:
-        """ The only terminal condition is no time remains
-        """
-        ### BEGIN SOLUTION
-        return self.time_remains <= 0
-        ### END SOLUTION
-
-    @property
-    def possible_actions(self) -> list:
-        """ The possible actions based on the current state
-            Note that you are only moving a single agent
-        """
-        ### BEGIN SOLUTION
-        i, j = self._paths[self._turn][-1]
-        actions = [MazeAction(self._turn, (i + 1, j)),
-                   MazeAction(self._turn, (i - 1, j)),
-                   MazeAction(self._turn, (i, j + 1)),
-                   MazeAction(self._turn, (i, j - 1))]
-        return [MazeAction(self._turn, action.position) for action in actions if
-                self.is_in_range(action.position) and
-                action.position not in self.environment.obstacles]
-        ### END SOLUTION
-
-    def execute_action(self, action: MazeAction) -> "MazeState":
-        """ Execute the action based on the current state
-            You can assume that the action is always valid
-        :param action: The action
-        :return: The state after being updated
-        """
-        ### BEGIN SOLUTION
-        new_state = self.__copy__()
-        new_state.paths[action.agent_index].append(action.position)
-        new_state.switch_agent()
-        return new_state
-        ### END SOLUTION
-
-
-if __name__ == '__main__':
-    def line(start: (int, int), increment: (int, int), length: int) -> set:
-        return set(
-            [(start[0] + k * increment[0], start[1] + k * increment[1]) for
-             k in range(length + 1)])
-
-
-    def circle(center: (int, int), radius: int = 1):
-        return set([(i, j)
-                    for i in range(center[0] - radius, center[0] + radius + 1)
-                    for j in range(center[1] - radius, center[1] + radius + 1)
-                    if
-                    (i - center[0]) ** 2 + (j - center[1]) ** 2 <= radius ** 2])
-
-
-    def gen_obstacles():
-        obstacles = {(10, 10), (11, 9), (11, 10), (12, 11), (13, 10), (12, 7),
-                     (15, 7), (15, 9), (15, 10), (15, 12), (15, 13), (15, 14),
-                     (16, 5), (16, 8), (16, 9), (16, 10), (3, 9), (3, 7),
-                     (2, 7),
-                     (2, 8), (2, 9), (18, 2), (18, 3), (17, 3), (16, 3),
-                     (18, 6),
-                     (19, 6), (16, 2), (12, 18), (12, 19), (18, 12), (19, 12),
-                     (18, 9), (16, 16), (16, 17), (16, 19), (17, 16), (18, 19),
-                     (10, 16), (10, 17), (9, 18), (13, 15), (2, 12), (7, 11),
-                     (2, 2), (2, 4), (3, 3), (3, 2), (3, 5)}
-        obstacles = obstacles.union(line((5, 9), (1, 0), 4)) \
-            .union(line((9, 9), (0, -1), 4)).union(line((5, 7), (0, -1), 5)) \
-            .union(line((7, 5), (0, -1), 3)).union(line((9, 3), (1, 0), 4)) \
-            .union(line((11, 4), (0, 1), 2)).union(line((9, 3), (1, 0), 4)) \
-            .union(circle((5, 15), 3)).union(line((10, 13), (1, 0), 3))
-        return obstacles
-
-
-    def maze_example_1(state_class):
-        obstacles = gen_obstacles()
-        targets = {(6, 3): 3, (4, 8): 3, (2, 3): 3, (14, 4): 3, (15, 8): 3,
-                   (17, 3): 3, (9, 12): 3, (14, 14): 3, (8, 16): 3, (11, 11): 1,
-                   (11, 13): 1, (12, 6): 1, (10, 7): 1, (8, 6): 1, (8, 8): 1,
-                   (16, 12): 1, (11, 16): 1, (18, 4): 1}
-        env = MazeEnvironment(xlim=(0, 20), ylim=(0, 20), obstacles=obstacles,
-                              targets=targets, is_border_obstacle_filled=True)
-        state = state_class(environment=env, time_remains=15)
-        state.add_agent((7, 7)).add_agent((13, 8)).add_agent((12, 12))
-        return state
-
-    print(maze_example_1(MazeState).possible_actions)

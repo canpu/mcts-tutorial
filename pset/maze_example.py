@@ -2,8 +2,6 @@ from maze_unfinished import *
 # from mcts import *
 
 
-from mcts_full import *
-
 def line(start: (int, int), increment: (int, int), length: int) -> set:
     return set([(start[0] + k * increment[0], start[1] + k * increment[1]) for
                 k in range(length + 1)])
@@ -62,14 +60,15 @@ def maze_example_2(state_class):
     return state
 
 
-def simulate(mcts_select_policy, mcts_expand_policy, mcts_rollout_policy,
-             mcts_backpropagate_policy, initial_state: AbstractState,
+def simulate(mcts_class, mcts_select_policy, mcts_expand_policy,
+             mcts_rollout_policy,
+             mcts_backpropagate_policy, initial_state: UnfinishedMazeState,
              rand_seed: int = 0):
-    mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15, samples=1000,
-                                tree_select_policy=mcts_select_policy,
-                                tree_expand_policy=mcts_expand_policy,
-                                rollout_policy=mcts_rollout_policy,
-                                backpropagate_method=mcts_backpropagate_policy)
+    mcts = mcts_class(initial_state, max_tree_depth=15, samples=1000,
+                      tree_select_policy=mcts_select_policy,
+                      tree_expand_policy=mcts_expand_policy,
+                      rollout_policy=mcts_rollout_policy,
+                      backpropagate_method=mcts_backpropagate_policy)
     random.seed(rand_seed)
     state = deepcopy(initial_state)
     time = 0
@@ -85,18 +84,3 @@ def simulate(mcts_select_policy, mcts_expand_policy, mcts_rollout_policy,
             if state.is_terminal:
                 break
     return state
-
-
-if __name__ == "__main__":
-    print("===== Start of Example 1 =====")
-    simulate(initial_state=maze_example_1(MazeState),
-             mcts_select_policy=select,
-             mcts_expand_policy=expand,
-             mcts_rollout_policy=default_rollout_policy,
-             mcts_backpropagate_policy=backpropagate).visualize()
-    print("\n===== Start of Example 2 =====")
-    simulate(initial_state=maze_example_2(MazeState),
-             mcts_select_policy=select,
-             mcts_expand_policy=expand,
-             mcts_rollout_policy=default_rollout_policy,
-             mcts_backpropagate_policy=backpropagate).visualize()
