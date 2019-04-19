@@ -4,11 +4,7 @@ import numpy as np
 from nose.tools import assert_equal, ok_
 from IPython.display import display, HTML, clear_output
 from maze_unfinished import MazeEnvironment, MazeAction
-
-from state  import AbstractState  as State
-from state  import AbstractAction as Action
-from mcts   import Node
-from mcts   import MonteCarloSearchTree
+from mcts import Node
 from gomoku import *
 
 
@@ -196,16 +192,16 @@ def test_reward(maze_class):
     env = MazeEnvironment(xlim=(0, 4), ylim=(0, 4), obstacles=obstacles,
                           targets=targets, is_border_obstacle_filled=True)
     state = maze_class(environment=env, time_remains=15)
-    state.add_agent((2, 3), (3, 2))
-    assert_equal(state.reward, 0.0)
+    state.add_agent((2, 3)).add_agent((3, 2))
+    assert_equal(state.reward, 0.0, "wrong reward")
     state.paths[0].append((2, 4))
-    assert_equal(state.reward, 4.0)
+    assert_equal(state.reward, 4.0, "wrong reward")
     state.paths[1].append((3, 1))
-    assert_equal(state.reward, 6.0)
+    assert_equal(state.reward, 6.0, "wrong reward")
     state.paths[0].append((1, 2))
-    assert_equal(state.reward, 9.0)
+    assert_equal(state.reward, 9.0, "wrong reward")
     state.paths[1].append((4, 2))
-    assert_equal(state.reward, 10.0)
+    assert_equal(state.reward, 10.0, "wrong reward")
     return True
 
 
@@ -217,7 +213,8 @@ def test_is_terminal(maze_class):
                           targets=targets, is_border_obstacle_filled=True)
     for time in range(-10, 11):
         state = maze_class(environment=env, time_remains=time)
-        assert_equal(state.is_terminal, time > 0)
+        assert_equal(state.is_terminal, time <= 0,
+                     "wrong terminal state")
     return True
 
 
@@ -225,24 +222,28 @@ def test_possible_actions(maze_class):
     """if possible_actions method is implemented correctly"""
     obstacles = {(2, 2), (3, 3), (4, 3), (4, 4)}
     targets = {(1, 2): 3, (2, 4): 4, (3, 1): 2, (4, 2): 1}
-    env = MazeEnvironment(xlim=(0, 4), ylim=(0, 4), obstacles=obstacles,
+    env = MazeEnvironment(xlim=(0, 5), ylim=(0, 5), obstacles=obstacles,
                           targets=targets, is_border_obstacle_filled=True)
     state = maze_class(environment=env, time_remains=15)
-    state.add_agent((2, 3), (3, 2))
+    state.add_agent((2, 3)).add_agent((3, 2))
     assert_equal(set(state.possible_actions),
-                 {MazeAction(0, (1, 3)), MazeAction(0, (2, 4))})
+                 {MazeAction(0, (1, 3)), MazeAction(0, (2, 4))},
+                 "wrong possible actions")
     state.switch_agent()
     assert_equal(set(state.possible_actions),
-                 {MazeAction(1, (3, 1)), MazeAction(0, (4, 2))})
+                 {MazeAction(1, (3, 1)), MazeAction(1, (4, 2))},
+                 "wrong possible actions")
     state.switch_agent()
     state.paths[0].append((2, 4))
     assert_equal(set(state.possible_actions),
                  {MazeAction(0, (1, 4)), MazeAction(0, (3, 4)),
-                  MazeAction(0, (2, 3))})
+                  MazeAction(0, (2, 3))},
+                 "wrong possible actions")
     state.switch_agent()
     state.paths[1].append((4, 2))
     assert_equal(set(state.possible_actions),
-                 {MazeAction(1, (3, 2)), MazeAction(1, (4, 1))})
+                 {MazeAction(1, (3, 2)), MazeAction(1, (4, 1))},
+                 "wrong possible actions")
     return True
 
 
@@ -253,21 +254,29 @@ def test_take_action(maze_class):
     env = MazeEnvironment(xlim=(0, 4), ylim=(0, 4), obstacles=obstacles,
                           targets=targets, is_border_obstacle_filled=True)
     state = maze_class(environment=env, time_remains=15)
-    state.add_agent((2, 3), (3, 2))
-    state.execute_action(MazeAction(0, (2, 4)))
-    assert_equal(state.paths[0], [(2, 3), (2, 4)])
+    state.add_agent((2, 3)).add_agent((3, 2))
+
+    state1 = state.execute_action(MazeAction(0, (2, 4)))
+    assert_equal(state1.paths[0], [(2, 3), (2, 4)])
+    assert_equal(state1.time_remains, 15)
+    assert_equal(state1.turn, 1)
+
+    state2 = state1.execute_action(MazeAction(1, (4, 2)))
+    assert_equal(state2.paths[1], [(3, 2), (4, 2)])
+    assert_equal(state2.time_remains, 14)
+    assert_equal(state2.turn, 0)
+
+    state3 = state2.execute_action(MazeAction(0, (1, 4)))
+    assert_equal(state3.paths[0], [(2, 3), (2, 4), (1, 4)])
+    assert_equal(state3.time_remains, 14)
+    assert_equal(state3.turn, 1)
+
+    state4 = state3.execute_action(MazeAction(1, (4, 1)))
+    assert_equal(state4.paths[1], [(3, 2), (4, 2), (4, 1)])
+    assert_equal(state4.time_remains, 13)
+    assert_equal(state4.turn, 0)
+
+    assert_equal(state.paths, [[(2, 3)], [(3, 2)]])
     assert_equal(state.time_remains, 15)
-    assert_equal(state.turn, 1)
-    state.execute_action(MazeAction(1, (4, 2)))
-    assert_equal(state.paths[1], [(3, 2), (4, 2)])
-    assert_equal(state.time_remains, 14)
-    assert_equal(state.turn, 0)
-    state.execute_action(MazeAction(0, (1, 4)))
-    assert_equal(state.paths[0], [(2, 3), (2, 4), (1, 4)])
-    assert_equal(state.time_remains, 14)
-    assert_equal(state.turn, 1)
-    state.execute_action(MazeAction(1, (4, 1)))
-    assert_equal(state.paths[1], [(3, 2), (4, 2), (4, 1)])
-    assert_equal(state.time_remains, 13)
     assert_equal(state.turn, 0)
     return True

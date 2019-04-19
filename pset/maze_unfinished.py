@@ -158,8 +158,6 @@ class UnfinishedMazeState(AbstractState):
     def __init__(self, environment: MazeEnvironment, time_remains: int = 10):
         """ Create a state of the AUV reward-collection game
         """
-        if time_remains < 0:
-            raise ValueError("The remai ning time cannot be negative")
         self._paths = []
         self._environment = environment
         self._time_remains = time_remains

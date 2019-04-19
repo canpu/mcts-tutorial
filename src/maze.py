@@ -252,7 +252,7 @@ class MazeState(AbstractState):
                    MazeAction(self._turn, (i - 1, j)),
                    MazeAction(self._turn, (i, j + 1)),
                    MazeAction(self._turn, (i, j - 1))]
-        return [MazeAction(self._turn, action.position) for action in actions if
+        return [action for action in actions if
                 self.is_in_range(action.position) and
                 action.position not in self._environment.obstacles]
 

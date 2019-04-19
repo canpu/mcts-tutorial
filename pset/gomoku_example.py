@@ -96,7 +96,7 @@ def simulate_with_black_sample_arbitrarily(select_policy, expand_policy,
 def simulate_with_black_sample_neighborhood(select_policy, expand_policy,
                                             simulate_policy,
                                             backpropagate_policy,
-                                            random_seed: int = 1000,
+                                            random_seed: int = 0,
                                             num_iters: int = 1000) -> None:
     """ The black player estimates possible locations only if a position's
         neighbor is not totally unoccupied
