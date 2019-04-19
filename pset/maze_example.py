@@ -1,5 +1,4 @@
 from maze_unfinished import *
-# from mcts import *
 
 
 def line(start: (int, int), increment: (int, int), length: int) -> set:

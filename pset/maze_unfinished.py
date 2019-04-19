@@ -6,7 +6,6 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import FancyArrow, Rectangle, Circle
 import numpy as np
 from copy import deepcopy
-import abc
 
 
 class MazeAction(AbstractAction):

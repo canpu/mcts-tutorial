@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="533cca82-65c2-4c2e-b620-53bcc157a65b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/pset/pset_mcts_collaboration.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/maze_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/pset/maze_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/maze_unfinished.py" beforeDir="false" afterPath="$PROJECT_DIR$/pset/maze_unfinished.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pset/mcts_full.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,8 +46,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/maze_unfinished.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="295" column="21" lean-forward="true" selection-start-line="295" selection-start-column="21" selection-end-line="295" selection-end-column="21" />
+            <state relative-caret-position="105">
+              <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -56,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pset/mcts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1650">
-              <caret line="218" lean-forward="true" selection-start-line="218" selection-end-line="218" />
+            <state relative-caret-position="45">
+              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
                 <element signature="e#119#2463#0" />
@@ -70,20 +72,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pset/maze_example.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="65" column="22" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pset/mcts_full.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="121" selection-start-line="121" selection-end-line="121" />
-              <folding>
-                <element signature="e#728#963#0" />
-              </folding>
+            <state>
+              <caret column="29" selection-start-column="29" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -145,7 +135,6 @@
       <find>paths</find>
       <find>time</find>
       <find>50</find>
-      <find>seed</find>
       <find>list</find>
       <find>vline</find>
       <find>name</find>
@@ -164,13 +153,14 @@
       <find>take_a</find>
       <find>UnfinishedMazeState</find>
       <find>take</find>
-      <find>search</find>
       <find>take_action</find>
       <find>execute_action</find>
       <find>possible_actions</find>
       <find>unfinishedm</find>
       <find>Unfinished</find>
+      <find>seed</find>
       <find>unfi</find>
+      <find>search</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -512,18 +502,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pset/mcts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="218" lean-forward="true" selection-start-line="218" selection-end-line="218" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#119#2463#0" />
-            <element signature="e#2649#4287#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mcts.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="290">
@@ -560,18 +538,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pset/maze_unfinished.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="295" column="21" lean-forward="true" selection-start-line="295" selection-start-column="21" selection-end-line="295" selection-end-column="21" />
+        <state relative-caret-position="105">
+          <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pset/mcts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#119#2463#0" />
+            <element signature="e#2649#4287#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pset/maze_example.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="65" column="22" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="22" />
+        <state>
+          <caret column="29" selection-start-column="29" selection-end-column="29" />
         </state>
       </provider>
     </entry>
