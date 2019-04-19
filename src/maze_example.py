@@ -60,9 +60,14 @@ def maze_example_2():
     return state
 
 
-def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
-    mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15,
-                                samples=1000)
+def simulate(mcts_select_policy, mcts_expand_policy, mcts_rollout_policy,
+             mcts_backpropagate_policy, initial_state: MazeState,
+             rand_seed: int = 0) -> MazeState:
+    mcts = MonteCarloSearchTree(initial_state, max_tree_depth=15, samples=1000,
+                                tree_select_policy=mcts_select_policy,
+                                tree_expand_policy=mcts_expand_policy,
+                                rollout_policy=mcts_rollout_policy,
+                                backpropagate_method=mcts_backpropagate_policy)
     random.seed(rand_seed)
     state = initial_state.__copy__()
     time = 0
@@ -73,7 +78,7 @@ def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
         for i in range(len(state.paths)):
             action = actions[i]
             print(action)
-            state.take_action(action)
+            state = state.execute_action(action)
             mcts.update_root(action)
             if state.is_terminal:
                 break
@@ -82,6 +87,14 @@ def simulate(initial_state: MazeState, rand_seed: int = 0) -> MazeState:
 
 if __name__ == "__main__":
     print("===== Start of Example 1 =====")
-    simulate(maze_example_1()).visualize()
+    simulate(initial_state=maze_example_1(),
+             mcts_select_policy=select,
+             mcts_expand_policy=expand,
+             mcts_rollout_policy=default_rollout_policy,
+             mcts_backpropagate_policy=backpropagate).visualize()
     print("\n===== Start of Example 2 =====")
-    simulate(maze_example_2()).visualize()
+    simulate(initial_state=maze_example_2(),
+             mcts_select_policy=select,
+             mcts_expand_policy=expand,
+             mcts_rollout_policy=default_rollout_policy,
+             mcts_backpropagate_policy=backpropagate).visualize()

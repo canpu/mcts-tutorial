@@ -159,17 +159,17 @@ class UnfinishedMazeState(AbstractState):
         """ Create a state of the AUV reward-collection game
         """
         if time_remains < 0:
-            raise ValueError("The remaining time cannot be negative")
+            raise ValueError("The remai ning time cannot be negative")
         self._paths = []
         self._environment = environment
         self._time_remains = time_remains
         self._turn = 0  # The index of which agent should move next
 
-    def __copy__(self) -> "UnfinishedMazeState":
+    def __copy__(self):
         """ Deep copy does not apply to the Environment object because
             it is supposed to be static
         """
-        copy = UnfinishedMazeState(self._environment)
+        copy = self.__class__(self._environment)
         copy._time_remains = self._time_remains
         copy._paths = deepcopy(self._paths)
         copy._turn = self._turn
@@ -180,7 +180,7 @@ class UnfinishedMazeState(AbstractState):
                 self._environment.x_max and self._environment.y_min
                 <= position[1] <= self._environment.y_max)
 
-    def add_agent(self, position: (int, int)) -> "UnfinishedMazeState":
+    def add_agent(self, position: (int, int)):
         if (self.is_in_range(position) and
                 position not in self._environment.obstacles):
             self._paths.append([position])
@@ -205,7 +205,7 @@ class UnfinishedMazeState(AbstractState):
 
     @property
     def reward(self) -> float:
-        raise Exception("Property reward is not implemented")
+        raise NotImplementedError("Property reward is not implemented")
 
     @property
     def time_remains(self) -> int:
@@ -215,26 +215,17 @@ class UnfinishedMazeState(AbstractState):
     def is_terminal(self) -> bool:
         """ A state is terminal if and only if the time runs out
         """
-        raise Exception("Property is_terminal is not implemented")
+        raise NotImplementedError("Property is_terminal is not implemented")
 
-    def take_action(self, action: MazeAction) -> "UnfinishedMazeState":
-        """ Execute the action based on the current state
-        :param action: The action
-        :return: The updated state
-        """
-        raise Exception("Function take_action is not implemented")
-
-    def execute_action(self, action: MazeAction) -> "UnfinishedMazeState":
+    def execute_action(self, action: MazeAction):
         """ Make a copy of the current state, execute the action and return the
             new state
         :param action: The action
         :return: A copy of the new state
         """
-        new_state = self.__copy__()
-        new_state.take_action(action)
-        return new_state
+        raise NotImplementedError("Function execute_action is not implemented")
 
-    def switch_agent(self) -> "UnfinishedMazeState":
+    def switch_agent(self):
         """ After the movement of one agent, it would be the turn of the next
             agent
         """
@@ -249,7 +240,8 @@ class UnfinishedMazeState(AbstractState):
 
     @property
     def possible_actions(self) -> list:
-        raise Exception("The property possible_actions is not implemented")
+        raise NotImplementedError("The property possible_actions is "
+                                  "not implemented")
 
     def visualize(self, file_name=None, fig_size: (float, float) = (6.5, 6.5),
                   size_auv_path: float = 0.8, size_max_radius: float = 0.3,
