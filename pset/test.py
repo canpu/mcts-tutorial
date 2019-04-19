@@ -23,24 +23,25 @@ def test_select(select):
     """return true iff select method is implemented correctly
     """
     # initialize a blank Gomoku board
-    gomoku_init_state = GomokuState(use_default_heuristics=True, reward_player=0)
-    gomoku_init_node  = Node(gomoku_init_state)
+    gomoku_init_state = GomokuState(use_default_heuristics=True,
+                                    reward_player=0)
+    gomoku_init_node = Node(gomoku_init_state)
 
     # black makes first move
-    black_move_1    = gomoku_init_node.add_child(GomokuAction(0,(4,4)))    
+    black_move_1 = gomoku_init_node.add_child(GomokuAction(0, (4, 4)))
 
     # consider all moves for white 
-    white_move_1    = black_move_1.add_child(GomokuAction(1,(3,4)))
-    white_move_2    = black_move_1.add_child(GomokuAction(1,(3,5)))
-    white_move_3    = black_move_1.add_child(GomokuAction(1,(4,5)))
-    white_move_4    = black_move_1.add_child(GomokuAction(1,(5,5)))
-    white_move_5    = black_move_1.add_child(GomokuAction(1,(5,4)))
-    white_move_6    = black_move_1.add_child(GomokuAction(1,(5,3)))
-    white_move_7    = black_move_1.add_child(GomokuAction(1,(4,3)))
-    white_move_8    = black_move_1.add_child(GomokuAction(1,(3,3)))
+    white_move_1 = black_move_1.add_child(GomokuAction(1, (3, 4)))
+    white_move_2 = black_move_1.add_child(GomokuAction(1, (3, 5)))
+    white_move_3 = black_move_1.add_child(GomokuAction(1, (4, 5)))
+    white_move_4 = black_move_1.add_child(GomokuAction(1, (5, 5)))
+    white_move_5 = black_move_1.add_child(GomokuAction(1, (5, 4)))
+    white_move_6 = black_move_1.add_child(GomokuAction(1, (5, 3)))
+    white_move_7 = black_move_1.add_child(GomokuAction(1, (4, 3)))
+    white_move_8 = black_move_1.add_child(GomokuAction(1, (3, 3)))
 
     # set the reward and sample count for black moves
-    black_move_1.num_samples, white_move_1.tot_reward = (13,35)
+    black_move_1.num_samples, white_move_1.tot_reward = (13, 35)
 
     # set the reward and sample count for white moves
     white_move_1.num_samples, white_move_1.tot_reward = (1,  1)
@@ -53,16 +54,24 @@ def test_select(select):
     white_move_8.num_samples, white_move_8.tot_reward = (1,  0)
 
     # check that the correct action was selected
-    assert_equal(select(black_move_1, 0.00)[0], GomokuAction(1,(4,5)), "wrong action selected!")
-    assert_equal(select(black_move_1, 1.50)[0], GomokuAction(1,(4,5)), "wrong action selected!")
-    assert_equal(select(black_move_1, 1.60)[0], GomokuAction(1,(5,5)), "wrong action selected!")
-    assert_equal(select(black_move_1, 10.0)[0], GomokuAction(1,(5,5)), "wrong action selected!")
+    assert_equal(select(black_move_1, 0.00)[0], GomokuAction(1, (4, 5)),
+                 "wrong action selected!")
+    assert_equal(select(black_move_1, 1.50)[0], GomokuAction(1, (4, 5)),
+                 "wrong action selected!")
+    assert_equal(select(black_move_1, 1.60)[0], GomokuAction(1, (5, 5)),
+                 "wrong action selected!")
+    assert_equal(select(black_move_1, 10.0)[0], GomokuAction(1, (5, 5)),
+                 "wrong action selected!")
 
     # check that the correct node was selected
-    assert_equal(select(black_move_1, 0.00)[1], white_move_3, "wrong child node selected!")
-    assert_equal(select(black_move_1, 1.50)[1], white_move_3, "wrong child node selected!")
-    assert_equal(select(black_move_1, 1.60)[1], white_move_4, "wrong child node selected!")
-    assert_equal(select(black_move_1, 10.0)[1], white_move_4, "wrong child node selected!")
+    assert_equal(select(black_move_1, 0.00)[1], white_move_3,
+                 "wrong child node selected!")
+    assert_equal(select(black_move_1, 1.50)[1], white_move_3,
+                 "wrong child node selected!")
+    assert_equal(select(black_move_1, 1.60)[1], white_move_4,
+                 "wrong child node selected!")
+    assert_equal(select(black_move_1, 10.0)[1], white_move_4,
+                 "wrong child node selected!")
 
     return True
 
@@ -71,56 +80,56 @@ def test_expand(expand):
     """return true iff expand method is implemented correctly
     """
     # initialize a blank Gomoku board
-    gomoku_init_state = GomokuState(use_default_heuristics=True, reward_player=0)
-    gomoku_init_node  = Node(gomoku_init_state)
+    gomoku_init_state = GomokuState(use_default_heuristics=True,
+                                    reward_player=0)
+    gomoku_init_node = Node(gomoku_init_state)
 
     # black makes first move
-    init_node     = Node(gomoku_init_state)
-    black_node    = init_node.add_child(GomokuAction(0,(4,4)))
+    init_node = Node(gomoku_init_state)
+    black_node = init_node.add_child(GomokuAction(0,(4,4)))
     black_actions = list(black_node.unused_edges)
-    num_edges     = len(black_actions)
-    num_samples   = 500
-    deviation     = .20
-    white_nodes   = list([black_node.add_child(action) for 
-                          action in black_actions])
+    num_edges = len(black_actions)
+    num_samples = 500
+    deviation = .20
+    white_nodes = list([black_node.add_child(action) for
+                        action in black_actions])
 
     # count the results of calling `expand` many times
-    frequency_dict  = {}
+    frequency_dict = {}
     for i in range(num_edges * num_samples):
-        init_node  = Node(gomoku_init_state)
-        black_node = init_node.add_child(GomokuAction(0,(4,4)))
+        init_node = Node(gomoku_init_state)
+        black_node = init_node.add_child(GomokuAction(0, (4, 4)))
         white_node = expand(black_node)
-        if (white_node not in white_nodes):
+        if white_node not in white_nodes:
             print(white_node)
-            raise ValueError("returned a Node that is not associated with an untried action!")
+            raise ValueError("returned a Node that is not associated "
+                             "with an untried action!")
         if str(white_node) in frequency_dict: 
             frequency_dict[str(white_node)] += 1
-        else:        
-            frequency_dict[str(white_node)]  = 1
-
     # check that expand is behaving via random selection
     for value in frequency_dict.values():
-        if (abs(value - num_samples) > 
-            num_samples * deviation):
-            raise ValueError("possible actions are not being sampled uniformly at randomly!") 
+        if abs(value - num_samples) > num_samples * deviation:
+            raise ValueError("possible actions are not being sampled"
+                             " uniformly at randomly!")
    
     # check that exception is raised
-    init_node       = Node(gomoku_init_state)
-    black_node      = init_node.add_child(GomokuAction(0,(4,4)))
-    white_move_1    = black_node.add_child(GomokuAction(1,(3,4)))
-    white_move_2    = black_node.add_child(GomokuAction(1,(3,5)))
-    white_move_3    = black_node.add_child(GomokuAction(1,(4,5)))
-    white_move_4    = black_node.add_child(GomokuAction(1,(5,5)))
-    white_move_5    = black_node.add_child(GomokuAction(1,(5,4)))
-    white_move_6    = black_node.add_child(GomokuAction(1,(5,3)))
-    white_move_7    = black_node.add_child(GomokuAction(1,(4,3)))
-    white_move_8    = black_node.add_child(GomokuAction(1,(3,3)))
+    init_node = Node(gomoku_init_state)
+    black_node = init_node.add_child(GomokuAction(0, (4, 4)))
+    white_move_1 = black_node.add_child(GomokuAction(1, (3, 4)))
+    white_move_2 = black_node.add_child(GomokuAction(1, (3, 5)))
+    white_move_3 = black_node.add_child(GomokuAction(1, (4, 5)))
+    white_move_4 = black_node.add_child(GomokuAction(1, (5, 5)))
+    white_move_5 = black_node.add_child(GomokuAction(1, (5, 4)))
+    white_move_6 = black_node.add_child(GomokuAction(1, (5, 3)))
+    white_move_7 = black_node.add_child(GomokuAction(1, (4, 3)))
+    white_move_8 = black_node.add_child(GomokuAction(1, (3, 3)))
     try:
         expand(black_node)
     except Exception:
         pass
     else:
-       raise Exception("Should throw an exception for trying to expand a node that has already been expanded")
+        raise Exception("Should throw an exception for trying to expand "
+                        "a node that has already been expanded")
     return True
 
 
@@ -128,7 +137,7 @@ def test_default_rollout_policy(default_rollout_policy):
     """return true iff default_rollout_policy method is implemented correctly
     """
     gomoku_init_state = GomokuState(use_default_heuristics=True, reward_player=0)
-    frequency_dict    = {}
+    frequency_dict = {}
     for i in range(100):
         val = default_rollout_policy(gomoku_init_state)
         if val in frequency_dict:
@@ -138,8 +147,7 @@ def test_default_rollout_policy(default_rollout_policy):
     lower_bound = 40
     upper_bound = 70
     # check to see if the frequency is within a reasonable bound 
-    if not(frequency_dict[1] > lower_bound and 
-           frequency_dict[1] < upper_bound):
+    if not(lower_bound < frequency_dict[1] < upper_bound):
         raise ValueError("not performing random rollout policy correctly!")
     return True
 
@@ -148,16 +156,16 @@ def test_backpropagate(backpropagate):
     """return true iff backpropagate method is implemented correctly
     """
     init_state = GomokuState(use_default_heuristics=True, reward_player=0)
-    init_node  = Node(init_state)
+    init_node = Node(init_state)
 
     # assemble all of the moves 
-    black_move_0    = init_node.add_child(GomokuAction(0,(4,4)))
-    white_move_1    = black_move_0.add_child(GomokuAction(1,(5,4)))     
-    black_move_2    = white_move_1.add_child(GomokuAction(1,(6,4)))         
-    black_move_3    = white_move_1.add_child(GomokuAction(1,(5,5)))   
-    black_move_4    = white_move_1.add_child(GomokuAction(1,(5,3)))
-    white_move_5    = black_move_2.add_child(GomokuAction(1,(6,5)))   
-    white_move_6    = black_move_2.add_child(GomokuAction(1,(7,4)))   
+    black_move_0 = init_node.add_child(GomokuAction(0,(4,4)))
+    white_move_1 = black_move_0.add_child(GomokuAction(1,(5,4)))
+    black_move_2 = white_move_1.add_child(GomokuAction(1,(6,4)))
+    black_move_3 = white_move_1.add_child(GomokuAction(1,(5,5)))
+    black_move_4 = white_move_1.add_child(GomokuAction(1,(5,3)))
+    white_move_5 = black_move_2.add_child(GomokuAction(1,(6,5)))
+    white_move_6 = black_move_2.add_child(GomokuAction(1,(7,4)))
    
     # assign values to the "terminal" moves and back-propagate
     backpropagate(black_move_2,  5)
