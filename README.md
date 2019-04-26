@@ -58,12 +58,12 @@ has more rules to ensure fairness, however, for the pset, you do not need
 to consider them.
 
 You will be given a Gomuku game that has been played for a while, as below.
-[](img/gomoku_example_initial_state.png)
+![](img/gomoku_example_initial_state.png)
 
 The black side has already taken great advantage, and you are building an AI
 to help turn advantage into victory. A possible way for the black to win is
 shown below, but it is neither unique nor optimal.
-[](img/gomoku_example_black_wins.png)
+![](img/gomoku_example_black_wins.png)
 
 #### Pset Part 2
 In the second part of the pset, one learns how to create a `State` class in
@@ -77,12 +77,12 @@ building your `State` class.
 The second part uses `Maze`  as an example. We provide the some example
 environment. Red tiles are obstacles and blue circles are rewards, and the 
 agents' task is to collect as much reward as possible within given time.
-[](img/maze_example_2.png)
+![](img/maze_example_2.png)
 
 If your implementation of the required properties and methods is correct, you
 should be able to call the simulation function we have created. We have prepared
 a visualizer for the result, an example is shown below.
-[](img/maze_example_2_result.png)
+![](img/maze_example_2_result.png)
 
 
 ## Authors
