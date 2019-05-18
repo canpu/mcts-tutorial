@@ -90,9 +90,9 @@ a visualizer for the result, an example is shown below.
     examples - Gomuku and Maze
 * [Filippos Sotiropoulos](https://github.com/FilipposSot) - 
     Visualization and iPython notebook
-* [Gabe Margolis](https://github.com/gmargo11) -
-    The motivation and background section of lecture slides 
 * [Jacob Guggenheim](https://github.com/jguggenh) - 
+    The motivation and background section of lecture slides 
+* [Gabe Margolis](https://github.com/gmargo11) -
     The core algorithm section of lecture slides
 * [Zach Duguid](https://github.com/zduguid) -
     The extension section of lecture slides
